@@ -286,6 +286,7 @@ https://github.com/epaii/epii-server
 下载或clone到本地后，
 
 1、请复制`config.ini.example` 为 `config.ini`，按照配置文件的提示配置自己的项目。
+
 2、请运行项目下`install/install.php` 文件进行安装
 ```php
 path/to/php ./install/install.php
