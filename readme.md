@@ -276,11 +276,11 @@ app12[DB_PWD] = password2
 
 #### gitee仓库
 ```php
-https://gitee.com/epii/epii-web
+https://gitee.com/epii/epii-server
 ```
-#### github仓库
+#### github仓库首页
 ```php
-https://gitee.com/epii/epii-web
+https://github.com/epaii/epii-server
 ```
 
 下载或clone到本地后，
