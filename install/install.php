@@ -115,6 +115,8 @@ if (!$is_win)
    // chmod($re_install_bat,777);
    chmod($staop_bat,0777);
    chmod($start_bat,0777);
+   chmod($nignx_config,0777);
+
 }
 
 $lock_file = __DIR__.DIRECTORY_SEPARATOR.".time";
@@ -123,7 +125,7 @@ file_put_contents($lock_file,filectime($lock_file));
 foreach (["web", "logs"] as $d) {
     $web_dir = $base_root . DIRECTORY_SEPARATOR . $d;
     if (!is_dir($web_dir)) {
-        mkdir($web_dir, 777, true);
+        mkdir($web_dir, 0777, true);
     }
 }
 
