@@ -143,7 +143,7 @@ function parse_tpl($tpl_file, $find, $replace, $to_file = null)
     $txt = preg_replace($find, $replace, file_get_contents($tpl_file));
     if ($to_file) {
         if (!is_dir($todir = dirname($to_file))) {
-            mkdir($todir, 777, true);
+            mkdir($todir, 0777, true);
         }
         file_put_contents($to_file, $txt);
     } else {
