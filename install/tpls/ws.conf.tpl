@@ -35,14 +35,18 @@ server {
 {{domain_when_ip}}
 #---domain_when_ipend---
 
-            # ---domain_app---
-{{domain_app_list}}
-#---domain_app---
+
 
     set $app_sub -1;
     set $app_sub2 -1;
     set $app_sub3 -1;
     set $base_root  {{base_root}};
+
+
+          # ---domain_app---
+{{domain_app_list}}
+#---domain_app---
+
 
     set $root {{www_dir}};
 
