@@ -3,7 +3,7 @@ resolver 8.8.8.8 ipv6=off;
 
 server {
     listen {{this_port}};
-    server_name *.{{domain_this}} {{this_ip}};
+    server_name *.{{domain_this}} {{this_ip}} {{domain_app}};
 
      location ~ .*/_s1/([^\/]+)/_s2/([^\/]+)/_s3/([^\/]+)/(.*)$ {
             rewrite .*/_s1/([^\/]+)/_s2/([^\/]+)/_s3/([^\/]+)/(.*)$ /$4 break;
@@ -35,6 +35,9 @@ server {
 {{domain_when_ip}}
 #---domain_when_ipend---
 
+            # ---domain_app---
+{{domain_app_list}}
+#---domain_app---
 
     set $app_sub -1;
     set $app_sub2 -1;

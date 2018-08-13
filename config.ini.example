@@ -28,8 +28,8 @@ port[1] = 9001
 [app_dir]
 ;如果你的应用不在www_dir下，请指定项目路径（必须为绝对路径）
 ;app1 = /Users/mrren/Documents/phpworkspace/jianguan
-;epiiadmin=/Users/mrren/Documents/phpworkspace/EpiiWeb/web/epiiadmin/public
-
+epiiadmin=/Users/mrren/Documents/phpworkspace/WsAdmin
+ziyuan=/Users/mrren/Documents/webstrom_workspace/ziyuan/epiiadmin-js
 
 [app_php_select]
 ;默认所有的php版本自动为php_cgi[0] 的版本，如果有特殊需求请在这里设置
@@ -38,3 +38,6 @@ epiiadmin = 1
 [php_env]
 epiiadmin[db_hostname] = zhengxin
 
+[domain_app]
+ziyuan.loc=ziyuan
+ziyuan1.loc=ziyuan

@@ -20,8 +20,8 @@ if (!isset($ini['server']['domain_other'])) {
 if (!isset($ini['server']['www_dir'])) $ini['server']['www_dir'] = $base_root . DIRECTORY_SEPARATOR . "web";
 
 
-$find = ["base_root", "this_ip", "this_port", "php_root", "nginx_root", "domain_this", "domain_other", "domain_this_1", "domain_other_1", "www_dir", "nginx_cmd", "php_cmd"];
-$replace = [$base_root, $ini['server']['this_ip'], $ini['server']['this_port'], $ini['php']['root'][0], $ini['server']['nginx_root'], $ini['server']['domain_this'], $ini['server']['domain_other'], str_replace(".", "\\.", $ini['server']['domain_this']), str_replace(".", "\\.", $ini['server']['domain_other']), isset($ini['server']['www_dir']) ? $ini['server']['www_dir'] : $base_root . DIRECTORY_SEPARATOR . "web", $ini['nginx']['cmd'], $ini['server']['php_cmd']];
+$find = ["domain_app","base_root", "this_ip", "this_port", "php_root", "nginx_root", "domain_this", "domain_other", "domain_this_1", "domain_other_1", "www_dir", "nginx_cmd", "php_cmd"];
+$replace = [implode(" ",array_keys($ini['domain_app'])),$base_root, $ini['server']['this_ip'], $ini['server']['this_port'], $ini['php']['root'][0], $ini['server']['nginx_root'], $ini['server']['domain_this'], $ini['server']['domain_other'], str_replace(".", "\\.", $ini['server']['domain_this']), str_replace(".", "\\.", $ini['server']['domain_other']), isset($ini['server']['www_dir']) ? $ini['server']['www_dir'] : $base_root . DIRECTORY_SEPARATOR . "web", $ini['nginx']['cmd'], $ini['server']['php_cmd']];
 
 $root_dir = "";
 foreach ($ini['root_dir'] as $key => $value) {
@@ -63,8 +63,22 @@ if ($domian_when_ip) {
 }
 
 
+
+$domain_app_list = "";
+foreach ($ini['domain_app'] as $key => $value) {
+    $domain_app_list .= parse_tpl($this_dir . DIRECTORY_SEPARATOR . "tpls" . DIRECTORY_SEPARATOR . "nginx_domain_app.tpl", [ "this_ip", "default_app"], [$key,$value]);
+}
+
+$find[] = "domain_app_list";
+$replace[] = $domain_app_list;
+
+
 $nignx_config_tpl = $this_dir . DIRECTORY_SEPARATOR . "tpls" . DIRECTORY_SEPARATOR . 'ws.conf.tpl';
 $nignx_config = $base_root . DIRECTORY_SEPARATOR . "configs" . DIRECTORY_SEPARATOR . "nginx" . DIRECTORY_SEPARATOR . 'ws.conf';
+
+
+
+
 
 parse_tpl($nignx_config_tpl, $find, $replace, $nignx_config);
 
@@ -90,6 +104,12 @@ foreach ($ini['php']['php_cgi'] as $key => $value) {
 
 $find[] = "php_bat";
 $replace[] = $php_bat;
+
+
+
+
+
+
 
 
 $start_tpl = $this_dir . DIRECTORY_SEPARATOR . "tpls" . DIRECTORY_SEPARATOR . 'start.cmd.php.tpl';
