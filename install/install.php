@@ -66,7 +66,12 @@ if ($domian_when_ip) {
 
 $domain_app_list = "";
 foreach ($ini['domain_app'] as $key => $value) {
-    $domain_app_list .= parse_tpl($this_dir . DIRECTORY_SEPARATOR . "tpls" . DIRECTORY_SEPARATOR . "nginx_domain_app.tpl", [ "this_ip", "default_app"], [$key,$value]);
+    $appinfo = explode("/",$value);
+    for ($i =0;$i<4;$i++)
+    {
+        if (!$appinfo[$i]) $appinfo[$i] = -1;
+    }
+    $domain_app_list .= parse_tpl($this_dir . DIRECTORY_SEPARATOR . "tpls" . DIRECTORY_SEPARATOR . "nginx_domain_app.tpl", [ "domain", "app","app_sub","app_sub2","app_sub3"], [$key,$appinfo[0],$appinfo[1],$appinfo[2],$appinfo[3]]);
 }
 
 $find[] = "domain_app_list";
