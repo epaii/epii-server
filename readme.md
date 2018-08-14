@@ -1,6 +1,5 @@
 # EpiiServer是什么
-更快捷更方便的php+nginx多应用部署环境。
-
+EpiiServer是一个简单易用的基于Php的部署工具。它能帮助开发人员迅速的构建php+nginx多应用部署环境，帮助测试人员构建测试环境。
 ### 特性：
 1. 多应用快速部署,域名自动生成。
 2. 每个应用可设置自己php的版本。
@@ -8,6 +7,12 @@
 4. 域名与目录自动绑定，支持5级域名自动绑定目录。
 5. 与wamp等集成环境相比，更加侧重定制化配置，而非环境的安装。
 
+
+### EpiiServer的基本工作原理大致如下：
+
+首先，根据自己的需求安装nginx和php（可下载多个版本）
+然后，在配置文件配置自己的应用， 每一个设置自己的php版本及环境变量
+最后，通过`php install/install.php` 去修改nginx的config 文件。并生成服务。
 
 ## 解决了什么问题？
 先不说怎么安装，先看看你是否需要本应用。
@@ -127,6 +132,10 @@ default_app=app1
 ```
 设置完后，当访问 `http://127.0.0.1/` 时候将直接指向了`app1`。
 > ip 访问的作用在于别人对你电脑的访问。当然别人也可以在他`hosts`文件中绑定 app1.loc.com 到你的ip，直接访问域名也可以
+
+
+
+
 
 ##  2、多个php版本共存。
 
@@ -252,6 +261,25 @@ app12[DB_PWD] = password2
 > 阿里云和微软云等云平台都有设置环境变量的方法。
 
 
+
+##  4、域名与App绑定。
+
+如果有另一个域名，www.mydomain.com 。想绑定到一个app。
+
+如果按上述配置的入口域名为：
+
+```
+dir.app.loc.com
+```
+
+我们只需在`config.ini`的`[domain_app]`模块绑定就可以了
+
+```json
+[domain_app]
+www.mydomain.com=app/dir
+```
+
+
 ## 如何安装
 
 `EpiiServer` 侧重的是`nginx` `php` 安装后的灵活配置，而非 `nginx` `php`本身的安装。
@@ -347,6 +375,8 @@ epiiadmin = 1
 
 [php_env]
 epiiadmin[db_hostname] = zhengxin
+[domain_app]
+;www.mydomain.com=app10/dir
 ```
 
 大部分参数在上述教程已经涉及到。重点介绍
