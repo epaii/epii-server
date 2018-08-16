@@ -104,7 +104,7 @@ file_put_contents($nignx_config_root, $myconfig . "\r\n" . $pd . "\r\n}");
 
 $php_bat = "";
 foreach ($ini['php']['php_cgi'] as $key => $value) {
-    $php_bat .= parse_tpl($this_dir . DIRECTORY_SEPARATOR . "tpls" . DIRECTORY_SEPARATOR . "start.php.tpl", ["i", "port", "root", "cmd"], [$key, $ini['php']['port'][$key], dirname($value), $value]);
+    $php_bat .= parse_tpl($this_dir . DIRECTORY_SEPARATOR . "tpls" . DIRECTORY_SEPARATOR . "start.php.tpl", ["base_root","i", "port", "root", "cmd"], [$base_root,$key, $ini['php']['port'][$key], dirname($value), $value]);
 }
 
 $find[] = "php_bat";
