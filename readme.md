@@ -290,7 +290,7 @@ www.mydomain.com=app/dir
 
 2、根据自己的需要下载安装`php`，可下载多个版本。
 
-3、window 用户须知道安装的各个php版本路径及`php-cgi`的位置，并且每个版本可以成功运行
+3、window 用户须知道安装的各个php版本路径及`php-cgi`的位置，并且每个版本可以成功运行(window下有些电脑缺少dll文件，网上下载即可)
 ```php
 /path/to/php-cgi.exe -b 127.0.0.1:9000
 ```
