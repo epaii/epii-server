@@ -12,7 +12,7 @@ $is_win = strtoupper(substr(PHP_OS, 0, 3)) == 'WIN';
 $shall_ext = $is_win ? "bat" : "sh";
 
 var_dump($_SERVER);
-
+var_dump($_ENV);
 $ini = parse_ini_file($base_root . DIRECTORY_SEPARATOR . "config.ini", true);
 $ini['server']['nginx_root'] = dirname($ini['nginx']['cmd']);
 $ini['server']['php_cmd'] = $_SERVER['_'];
