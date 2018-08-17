@@ -11,6 +11,7 @@ $this_dir = __DIR__;
 $is_win = strtoupper(substr(PHP_OS, 0, 3)) == 'WIN';
 $shall_ext = $is_win ? "bat" : "sh";
 
+var_dump($_SERVER);
 
 $ini = parse_ini_file($base_root . DIRECTORY_SEPARATOR . "config.ini", true);
 $ini['server']['nginx_root'] = dirname($ini['nginx']['cmd']);
