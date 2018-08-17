@@ -13,7 +13,11 @@ $shall_ext = $is_win ? "bat" : "sh";
 $_SERVER['_'] = getPhp();
 $ini = parse_ini_file($base_root . DIRECTORY_SEPARATOR . "config.ini", true);
 $ini['server']['nginx_root'] = dirname($ini['nginx']['cmd']);
-$ini['server']['php_cmd'] = $_SERVER['_'];
+if (!isset($ini['server']['php_cmd']))
+{
+    $ini['server']['php_cmd'] = defined("PHP_BINARY")?PHP_BINARY:"php";
+}
+
 
 
 if (!isset($ini['server']['domain_other'])) {
