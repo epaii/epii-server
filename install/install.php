@@ -14,6 +14,9 @@ $shall_ext = $is_win ? "bat" : "sh";
 
 $ini = parse_ini_file($base_root . DIRECTORY_SEPARATOR . "config.ini", true);
 $ini['server']['nginx_root'] = dirname($ini['nginx']['cmd']);
+$ini['server']['php_cmd'] = $_SERVER['_'];
+
+
 if (!isset($ini['server']['domain_other'])) {
     $ini['server']['domain_other'] = "pc.jt";
 }
