@@ -193,5 +193,5 @@ function getPhp()
         $real_path = str_replace('ephp.exe', 'php.exe', $real_path);
 
     }
-    return $real_path;
+    return  $real_path = PHP_BINDIR . '/php';
 }
