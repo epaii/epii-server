@@ -15,7 +15,7 @@ $ini = parse_ini_file($base_root . DIRECTORY_SEPARATOR . "config.ini", true);
 $ini['server']['nginx_root'] = dirname($ini['nginx']['cmd']);
 if (!isset($ini['server']['php_cmd']))
 {
-    $ini['server']['php_cmd'] = defined("PHP_BINARY")?PHP_BINARY:"php";
+    $ini['server']['php_cmd'] =getPhp();
 }
 
 
@@ -174,28 +174,5 @@ function parse_tpl($tpl_file, $find, $replace, $to_file = null)
 
 function getPhp()
 {
-    if (substr(strtolower(PHP_OS), 0, 3) == 'win') {
-
-        $ini = ini_get_all();
-
-        $path = $ini['extension_dir']['local_value'];
-
-        $php_path = str_replace('\\', '/', $path);
-
-        $php_path = str_replace(array('/ext/', '/ext'), array('/', '/'), $php_path);
-
-        $real_path = $php_path . 'php.exe';
-
-    } else {
-
-        $real_path = PHP_BINDIR . '/php';
-
-    }
-
-    if (strpos($real_path, 'ephp.exe') !== FALSE) {
-
-        $real_path = str_replace('ephp.exe', 'php.exe', $real_path);
-
-    }
-    return  $real_path = PHP_BINDIR . '/php';
+    return defined("PHP_BINARY")?PHP_BINARY:"php";
 }
