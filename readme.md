@@ -290,10 +290,11 @@ www.mydomain.com=app/dir
 
 2、根据自己的需要下载安装`php`，可下载多个版本。
 
-3、window 用户须知道安装的各个php版本路径及`php-cgi`的位置，并且每个版本可以成功运行(window下有些电脑缺少dll文件，网上下载即可)
+3、window 用户须知道安装的各个php版本路径及`php-cgi`的位置，并且每个版本可以成功运行 
 ```php
 /path/to/php-cgi.exe -b 127.0.0.1:9000
 ```
+> window下有些电脑高版本php提示你的系统缺少dll，只需下载运行库即可。 下载地址： https://www.microsoft.com/zh-cn/download/details.aspx?id=48145
 
 4、linux，unix 用户须知道安装的各个php版本路径及`php-fpm`的位置和`php-fpm.conf`的路径，分别修改`php-fpm.conf`文件 ，并成功运行
 ```php
@@ -388,6 +389,9 @@ php_cmd=php
 ```
 `EpiiServer`本身是基于php的（并非你的网站），如果你的php在环境变量PATH下，则直接为默认配置即可。 如果不是。linux，unix 用户 为`path/to/php`,window用户为`paht/to/php.exe`
 
+
+
+ 
 
 > 最后希望`EpiiServer`能给您带来帮助。让您更多的时间去研发产品，而非环境搭建。
 
