@@ -29,12 +29,33 @@ server {
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         }
 
+        location ~ .*/_app/([^\/]+)/(.*)$ {
+        rewrite .*/_app/([^\/]+)/(.*)$ /$2 break;
+        proxy_pass http://$1.{{domain_this}}:{{this_port}};
+        proxy_set_header HOST   $1.{{domain_this}}:{{this_port}};
+        proxy_set_header X-Real-IP   $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        }
+
     set $app default;
 
             # ---domain_when_ip---
 {{domain_when_ip}}
 #---domain_when_ipend---
 
+
+
+if ( $uri	~*  ^/app/([^\/]+)/$ ) {
+set $app $1;
+rewrite ^/app/([^\/]+)/$ /index.php;
+
+}
+if ( $uri	~*  ^/app/([^\/]+)/(.*)$ ) {
+set $app $1;
+rewrite ^/app/([^\/]+)/(.*)$ /$2;
+
+
+}
 
 
     set $app_sub -1;
