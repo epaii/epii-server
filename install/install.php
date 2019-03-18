@@ -6,12 +6,22 @@
  * Time: 上午10:19
  */
 error_reporting(0);
+$this_dir = str_replace("\\","/",__DIR__);
 $base_root = str_replace(DIRECTORY_SEPARATOR . "install", "", __DIR__);
-$this_dir = __DIR__;
+$base_root = str_replace("\\","/",$base_root);
 $is_win = strtoupper(substr(PHP_OS, 0, 3)) == 'WIN';
 $shall_ext = $is_win ? "bat" : "sh";
 $_SERVER['_'] = getPhp();
 $ini = parse_ini_file($base_root . DIRECTORY_SEPARATOR . "config.ini", true);
+foreach($ini as $key=>$value)
+{
+    foreach($value as $k=>$v)
+    {
+        $ini[$key][$k] =  str_replace("\\","/",$v);
+    }
+}
+
+
 $ini['server']['nginx_root'] = dirname($ini['nginx']['cmd']);
 if (!isset($ini['server']['php_cmd']))
 {
