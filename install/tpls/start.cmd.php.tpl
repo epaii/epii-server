@@ -28,7 +28,7 @@ echo "\nStarting nginx...";
 
 
 
-runcmd('{{nginx_cmd}} -p {{nginx_root}}');
+runcmd('{{nginx_cmd}}{{nginx_root}}');
 
 echo "\nit works";
 function runcmd($cmd)

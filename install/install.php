@@ -21,8 +21,13 @@ foreach($ini as $key=>$value)
     }
 }
 
+if ($is_win)
+{
+    $ini['server']['nginx_root'] = " -p ".dirname($ini['nginx']['cmd']);
+}else{
+    $ini['server']['nginx_root'] =  "";
+}
 
-$ini['server']['nginx_root'] = dirname($ini['nginx']['cmd']);
 if (!isset($ini['server']['php_cmd']))
 {
     $ini['server']['php_cmd'] =getPhp();
