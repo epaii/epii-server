@@ -147,7 +147,7 @@ rewrite ^/app/([^\/]+)/(.*)$ /$2;
     error_log {{base_root}}/logs/nginx.error.log;
     root $root;
     location ~ \.php(.*)$ {
-        fastcgi_pass 127.0.0.1:$phpport;
+        fastcgi_pass $phpport;
         fastcgi_index index.php;
 
         # fastcgi_param SCRIPT_FILENAME  $root/$fastcgi_script_name;

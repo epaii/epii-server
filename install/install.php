@@ -55,13 +55,28 @@ $replace[] = $root_dir;
 
 $php_port = "";
 foreach ($ini['app_php_select'] as $key => $value) {
+    if (isset($ini['php']['port'][$value]))
     $php_port .= parse_tpl($this_dir . DIRECTORY_SEPARATOR . "tpls" . DIRECTORY_SEPARATOR . "nginx_php_port.tpl", ["app", "port"], [$key, $ini['php']['port'][$value]]);
+    else if(isset($ini['php']['socket'][$value]))
+    {
+        $php_port .= parse_tpl($this_dir . DIRECTORY_SEPARATOR . "tpls" . DIRECTORY_SEPARATOR . "nginx_php_socket.tpl", ["app", "socket"], [$key, $ini['php']['socket'][$value]]);
+    }
 }
+
 
 $find[] = "php_port";
 $replace[] = $php_port;
 $find[] = "php_port_0";
-$replace[] = $ini['php']['port'][0];
+if (isset($ini['php']['port'][0]))
+{
+    $replace[] = $ini['php']['port'][0];
+}else if (isset($ini['php']['socket'][0]))
+$replace[] = $ini['php']['socket'][0];
+else{
+    echo "default php not exist";
+    exit;
+}
+
 
 
 $app_dir = "";
