@@ -64,9 +64,7 @@ rewrite ^/app/([^\/]+)/(.*)$ /$2;
     set $base_root  {{base_root}};
 
 
-          # ---domain_app---
-{{domain_app_list}}
-#---domain_app---
+
 
 
     set $root {{www_dir}};
@@ -93,6 +91,11 @@ rewrite ^/app/([^\/]+)/(.*)$ /$2;
         set $app_sub2 $2;
         set $app_sub3 $1;
     }
+
+# ---domain_app---
+{{domain_app_list}}
+#---domain_app---
+
     if ( $app !~* ^default$ ) {
         set $root $root/$app;
     }

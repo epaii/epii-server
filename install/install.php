@@ -69,7 +69,7 @@ $replace[] = $php_port;
 $find[] = "php_port_0";
 if (isset($ini['php']['port'][0]))
 {
-    $replace[] = $ini['php']['port'][0];
+    $replace[] = "127.0.0.1:".$ini['php']['port'][0];
 }else if (isset($ini['php']['socket'][0]))
 $replace[] = $ini['php']['socket'][0];
 else{
