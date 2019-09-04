@@ -20,8 +20,6 @@ if (isset($ini['php_env']) && isset($ini['php_env'][$_ENV['APP_JT']])) {
 
 
 
-
-
 chdir(dirname($_ENV['SCRIPT_FILENAME_origin']));
 $_ENV['SCRIPT_FILENAME'] = $_SERVER['SCRIPT_FILENAME'] = $_ENV['SCRIPT_FILENAME_origin'];
 unset($_ENV['SCRIPT_FILENAME_origin']);
