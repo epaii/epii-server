@@ -44,7 +44,7 @@ linux unix 自动生成的文件为：
 全局命令可实现服务的快速启动，及应用的快速配置
 
 |命令|作用|
-|:---:|:---:|
+|:---|:---|
 |epii-server help|支持的命令列表|
 |epii-server config|配置详情|
 |epii-server start|启动服务|
