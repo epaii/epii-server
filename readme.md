@@ -45,6 +45,7 @@ linux unix 自动生成的文件为：
 
 |命令|作用|
 |:---:|:---:|
+|epii-server help|支持的命令列表|
 |epii-server config|配置详情|
 |epii-server start|启动服务|
 |epii-server stop|暂停服务|
