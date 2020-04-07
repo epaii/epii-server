@@ -135,9 +135,11 @@ function app_ls()
 
 function do_start()
 {
+		include __DIR__."/../default/start.php";
+	return;
     if(is_win())
     {
-        runcmd(__DIR__."/../start.cmd");
+        runcmd(__DIR__."/../start.bat");
     }else{
         runcmd(__DIR__."/../start.sh");
     }
@@ -146,11 +148,13 @@ function do_start()
 
 function do_stop()
 {
+
     if(is_win())
     {
-        runcmd(__DIR__."/../stop.cmd");
+		 
+        runcmd_this(__DIR__."/../stop.bat");
     }else{
-        runcmd(__DIR__."/../stop.sh");
+        runcmd_this(__DIR__."/../stop.sh");
     }
 }
 
@@ -159,12 +163,15 @@ function do_reload()
     do_stop();
     do_start();
 }
-function runcmd($cmd)
+function runcmd_this($cmd)
 {
 
+	$cmd = str_replace("\\","/",$cmd);
+ 
     if(strtoupper(substr(PHP_OS,0,3)) == 'WIN')
     {
-        pclose(popen('start /B '. $cmd, 'r'));
+		system($cmd);
+       // pclose(popen('start /B '. $cmd, 'r'));
     }else
     {
         pclose(popen($cmd.' > /dev/null &', 'r'));
@@ -176,6 +183,7 @@ if ($argc == 1) {
 }
 
 if ($argc == 3) {
+	 
     call_user_func("do_".$argv[1]);
     exit;
 }
