@@ -14,6 +14,97 @@ EpiiServer是一个简单易用的基于Php的部署工具。它能帮助开发�
 然后，在配置文件配置自己的应用， 每一个设置自己的php版本及环境变量
 最后，通过`php install/install.php` 去修改nginx的config 文件。并生成服务。
 
+
+## 安装
+下载或clone到本地后，
+
+1、请复制`config.ini.example` 为 `config.ini`，按照配置文件的提示配置自己的项目。
+
+2、请运行项目下`install/install.php` 文件进行安装
+```php
+path/to/php ./install/install.php
+```
+
+安装只需一次，安装后，会自动生成启动，停止运行文件。
+
+window自动生成的文件为：
+
+- start.bat 启动服务
+- stop.bat  停止服务
+
+linux unix 自动生成的文件为：
+
+- start.sh 启动服务
+- stop.sh  停止服务
+
+> 配置文件修改后记得 先关闭服务，再启动。
+
+3、全局命令
+
+全局命令可实现服务的快速启动，及应用的快速配置
+
+|命令|作用|
+|:---:|:---:|
+|epii-server config|配置详情|
+|epii-server start|启动服务|
+|epii-server stop|暂停服务|
+|epii-server restart|重启启动服务|
+|epii-server app list/ls|显示所有应用|
+|epii-server app add {appname}|为当前目录为新应用|
+|epii-server app remove|删除当前目录对应的应用|
+|epii-server app remove {appname}|删除应用|
+|epii-server app info|显示当前目录对应的应用信息|
+|epii-server app info {appname}|应用详情|
+|epii-server domain list\ls|域名列表|
+|epii-server domain add {domain} {appname}|新增域名绑定|
+|epii-server domain remove {domain}|接触域名绑定|
+
+
+### 配置文件（详细说明在下面）
+
+```php
+[server]
+;本机ip地址和端口
+this_ip = 127.0.0.1
+this_port = 80
+;本机域名前缀
+domain_this = this.jt
+;web项目路径，此路径下每一个文件夹会当做一个应用，如果某一个项目不想放在此目录下，可以再app_dir中单独设置
+
+;www_dir 为网站根目录，默认为web目录，如果设置请设置绝对路径
+;www_dir = /Users/mrren/Documents/phpworkspace/EpiiWeb/web
+
+;default_app = web1
+;本程序以php为脚本安装和启动服务，指定php命令地址，一般为php.exe的文件路径
+php_cmd=php
+
+[nginx]
+;nginx 文件地址; linux or unix 请指定nginx文件地址即可
+cmd = /usr/local/Cellar/nginx/1.15.0/bin/nginx
+nginx_config_file = /usr/local/etc/nginx/nginx.conf
+[php]
+;window下 php-cgi.exe 的路径，linux 下 php-fpm 路径
+php_cgi[0] = /usr/local/Cellar/php\@7.1/7.1.19/sbin/php-fpm
+;如果使用php-cgi，设置的端口将被启用。如果是php-fpm 请确保此端口和php-fpm.conf中一致（php-fpm.conf 需手动修改，多个php版本一定要设置不同的端口）
+port[0] = 9000
+php_cgi[1] = php-fpm
+socket[1] = "unix:/var/run/php-fpm.sock"
+[app_dir]
+;如果你的应用不在www_dir下，请指定项目路径（必须为绝对路径）
+;app1 = /Users/mrren/Documents/phpworkspace/jianguan
+;epiiadmin=/Users/mrren/Documents/phpworkspace/EpiiWeb/web/epiiadmin/public
+
+
+[app_php_select]
+;默认所有的php版本自动为php_cgi[0] 的版本，如果有特殊需求请在这里设置
+epiiadmin = 1
+
+[php_env]
+epiiadmin[db_hostname] = zhengxin
+[domain_app]
+;www.mydomain.com=app10/dir
+```
+
 ## 解决了什么问题？
 先不说怎么安装，先看看你是否需要本应用。
 
@@ -312,73 +403,7 @@ https://gitee.com/epii/epii-server
 https://github.com/epaii/epii-server
 ```
 
-下载或clone到本地后，
 
-1、请复制`config.ini.example` 为 `config.ini`，按照配置文件的提示配置自己的项目。
-
-2、请运行项目下`install/install.php` 文件进行安装
-```php
-path/to/php ./install/install.php
-```
-
-安装只需一次，安装后，会自动生成启动，停止运行文件。
-
-window自动生成的文件为：
-
-- start.bat 启动服务
-- stop.bat  停止服务
-
-linux unix 自动生成的文件为：
-
-- start.sh 启动服务
-- stop.sh  停止服务
-
-> 配置文件修改后记得 先关闭服务，再启动。
-
-### 配置文件
-
-```php
-[server]
-;本机ip地址和端口
-this_ip = 192.169.0.169
-this_port = 6688
-;本机域名前缀
-domain_this = this.jt
-;web项目路径，此路径下每一个文件夹会当做一个应用，如果某一个项目不想放在此目录下，可以再app_dir中单独设置
-
-;www_dir 为网站根目录，默认为web目录，如果设置请设置绝对路径
-;www_dir = /Users/mrren/Documents/phpworkspace/EpiiWeb/web
-
-;default_app = web1
-;本程序以php为脚本安装和启动服务，指定php命令地址，一般为php.exe的文件路径
-php_cmd=php
-
-[nginx]
-;nginx 文件地址; linux or unix 请指定nginx文件地址即可
-cmd = /usr/local/Cellar/nginx/1.15.0/bin/nginx
-nginx_config_file = /usr/local/etc/nginx/nginx.conf
-[php]
-;window下 php-cgi.exe 的路径，linux 下 php-fpm 路径
-php_cgi[0] = /usr/local/Cellar/php\@7.1/7.1.19/sbin/php-fpm
-;如果使用php-cgi，设置的端口将被启用。如果是php-fpm 请确保此端口和php-fpm.conf中一致（php-fpm.conf 需手动修改，多个php版本一定要设置不同的端口）
-port[0] = 9000
-php_cgi[1] = php-fpm
-port[1] = 9001
-[app_dir]
-;如果你的应用不在www_dir下，请指定项目路径（必须为绝对路径）
-;app1 = /Users/mrren/Documents/phpworkspace/jianguan
-;epiiadmin=/Users/mrren/Documents/phpworkspace/EpiiWeb/web/epiiadmin/public
-
-
-[app_php_select]
-;默认所有的php版本自动为php_cgi[0] 的版本，如果有特殊需求请在这里设置
-epiiadmin = 1
-
-[php_env]
-epiiadmin[db_hostname] = zhengxin
-[domain_app]
-;www.mydomain.com=app10/dir
-```
 
 大部分参数在上述教程已经涉及到。重点介绍
 
@@ -390,8 +415,6 @@ php_cmd=php
 `EpiiServer`本身是基于php的（并非你的网站），如果你的php在环境变量PATH下，则直接为默认配置即可。 如果不是。linux，unix 用户 为`path/to/php`,window用户为`paht/to/php.exe`
 
 
-
- 
 
 > 最后希望`EpiiServer`能给您带来帮助。让您更多的时间去研发产品，而非环境搭建。
 

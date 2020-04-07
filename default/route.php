@@ -9,10 +9,8 @@ $ini = parse_ini_file($base_root . DIRECTORY_SEPARATOR . "config.ini", true);
 
 if (isset($ini['php_env']) && isset($ini['php_env'][$_ENV['APP_JT']])) {
     foreach ($ini['php_env'][$_ENV['APP_JT']] as $key => $value) {
-
         putenv($key . "=" . $value);
         $_ENV[$key] = $_SERVER[$key] = $value;
-
 
     }
 }

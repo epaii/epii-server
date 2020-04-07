@@ -59,18 +59,24 @@ function app_add($name, $dir)
     }
 }
 
-function app_info($dir)
+function app_info($name, $dir = null)
 {
 
     $config = config();
     $apps = $config["app_dir"];
+    $names = [];
+    if (!$dir) {
+        $name = str_replace("\\", "/", $name);
+        $names = array_keys(array_filter($apps, function ($item) use ($name) {
+            return $item == $name;
+        }));
 
-    $dir = str_replace("\\", "/", $dir);
-    $names = array_keys(array_filter($apps, function ($item) use ($dir) {
-        return $item == $dir;
-    }));
+    } else {
+        if (isset($apps[$name]))
+        $names = [$name];
+    }
     if ($names) {
-        $string = PHP_EOL."当前目录所属APP:" . implode(",", $names);
+        $string = PHP_EOL."APP:" . implode(",", $names);
         foreach ($names as $name){
             $string .= PHP_EOL."http://".$config["server"]["this_ip"]."/app/".$name;
             $string .= PHP_EOL."http://".$name.".".$config["server"]["domain_this"];
@@ -133,16 +139,91 @@ function app_ls()
     app_list();
 }
 
+function domain_list()
+{
+    $config = config();
+    $list=[];
+    foreach ($config["domain_app"] as $key=>$value){
+        $list[$key]=["app"=>$value,"dir"=>isset($config["app_dir"][$value])?$config["app_dir"][$value]:""];
+    }
+    print_r($list);
+
+}
+function domain_add($name, $app)
+{
+
+    global $config_file;
+    $config = config();
+    $apps = $config["domain_app"];
+    if (isset($apps[$name])) {
+        show_error("Error:Domain is exist;" . $apps[$name]);
+        exit;
+    } else {
+        if (!isset($config["app_dir"][$app]))
+        {
+            show_error("App:".$app." is not exist");
+            exit;
+        }
+        $apps[$name] = $app;
+        $string = [];
+        foreach ($apps as $key => $value) {
+            $string[] = $key . "=" . $value;
+        }
+        $file_content = file_get_contents($config_file);
+        $file_content = preg_replace("/\[domain_app\](.*?)$/is", "[domain_app]" . PHP_EOL . implode(PHP_EOL, $string) , $file_content);
+        file_put_contents($config_file, $file_content);
+        show_success("创建成功");
+    }
+}
+function domain_remove($name)
+{
+
+    global $config_file;
+    $config = config();
+    $apps = $config["domain_app"];
+    if (!isset($apps[$name])) {
+        show_error("Error:Domain is not exist;" . $apps[$name]);
+        exit;
+    } else {
+
+        unset( $apps[$name]) ;
+        $string = [];
+        foreach ($apps as $key => $value) {
+            $string[] = $key . "=" . $value;
+        }
+        $file_content = file_get_contents($config_file);
+        $file_content = preg_replace("/\[domain_app\](.*?)$/is", "[domain_app]" . PHP_EOL . implode(PHP_EOL, $string) , $file_content);
+        file_put_contents($config_file, $file_content);
+        show_success("删除域名成功");
+    }
+}
+function do_config()
+{
+    print_r(config());
+
+
+}
+function do_help()
+{
+
+    echo "|epii-server config|配置详情|".PHP_EOL.
+"|epii-server start|启动服务|".PHP_EOL.
+"|epii-server stop|暂停服务|".PHP_EOL.
+"|epii-server restart|重启启动服务|".PHP_EOL.
+"|epii-server app list/ls|显示所有应用|".PHP_EOL.
+"|epii-server app add {appname}|为当前目录为新应用|".PHP_EOL.
+"|epii-server app remove|删除当前目录对应的应用|".PHP_EOL.
+"|epii-server app remove {appname}|删除应用|".PHP_EOL.
+"|epii-server app info|显示当前目录对应的应用信息|".PHP_EOL.
+"|epii-server domain list\ls|域名列表|".PHP_EOL.
+"|epii-server domain add {domain} {appname}|新增域名绑定|".PHP_EOL.
+"|epii-server domain remove {domain}|接触域名绑定|".PHP_EOL;
+
+}
 function do_start()
 {
 		include __DIR__."/../default/start.php";
-	return;
-    if(is_win())
-    {
-        runcmd(__DIR__."/../start.bat");
-    }else{
-        runcmd(__DIR__."/../start.sh");
-    }
+
 
 }
 
@@ -183,15 +264,21 @@ if ($argc == 1) {
 }
 
 if ($argc == 3) {
-	 
-    call_user_func("do_".$argv[1]);
+	 if (function_exists("do_".$argv[1]))
+         call_user_func("do_".$argv[1]);
     exit;
 }
 if ($argc > 3) {
     $mod = $argv[1];
     if ($mod == "app") {
         $ac = $argv[2];
+        if (function_exists("app_" . $ac))
         call_user_func_array("app_" . $ac, array_slice($argv, 3));
+        exit;
+    }else if ($mod == "domain") {
+        $ac = $argv[2];
+        if (function_exists("domain_" . $ac))
+            call_user_func_array("domain_" . $ac, array_slice($argv, 3));
         exit;
     }
 }

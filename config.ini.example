@@ -22,9 +22,9 @@ nginx_config_file = /usr/local/etc/nginx/nginx.conf
 ;window下 php-cgi.exe 的路径，linux 下 php-fpm 路径
 php_cgi[0] = /usr/local/Cellar/php\@7.1/7.1.19/sbin/php-fpm
 ;如果使用php-cgi，设置的端口将被启用。如果是php-fpm 请确保此端口和php-fpm.conf中一致（php-fpm.conf 需手动修改，多个php版本一定要设置不同的端口）
-port[0] = 9000
+port[0] = 9000 //如果是unix则使用   socket[0] = "unix:/var/run/php-fpm.sock"
 php_cgi[1] = php-fpm
-port[1] = 9001
+socket[1] = "unix:/var/run/php-fpm.sock"
 [app_dir]
 ;如果你的应用不在www_dir下，请指定项目路径（必须为绝对路径）
 ;app1 = /Users/mrren/Documents/phpworkspace/jianguan
