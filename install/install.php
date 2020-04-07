@@ -156,15 +156,24 @@ $stop_tpl = $this_dir . DIRECTORY_SEPARATOR . "tpls" . DIRECTORY_SEPARATOR . 'st
 $staop_bat = $base_root . DIRECTORY_SEPARATOR . "stop." . $shall_ext;
 parse_tpl($stop_tpl, $find, $replace, $staop_bat);
 
+
+$epii_server_tpl =  $this_dir . DIRECTORY_SEPARATOR . "tpls" . DIRECTORY_SEPARATOR . 'epii-server.' . $shall_ext . '.tpl';
+$epii_server_bat =  $base_root . DIRECTORY_SEPARATOR . "bin".DIRECTORY_SEPARATOR."epii-server." . $shall_ext;
+parse_tpl($epii_server_tpl, $find, $replace, $epii_server_bat);
 //$re_install_tpl = $this_dir . DIRECTORY_SEPARATOR . "tpls" . DIRECTORY_SEPARATOR . 're_install.'.$shall_ext.'.tpl';
 //$re_install_bat = $base_root . DIRECTORY_SEPARATOR . "re_install.".$shall_ext;
 //parse_tpl($re_install_tpl, $find, $replace, $re_install_bat);
 
 if (!$is_win) {
     // chmod($re_install_bat,777);
+
+
+
     chmod($staop_bat, 0777);
     chmod($start_bat, 0777);
     chmod($nignx_config, 0777);
+    chmod($epii_server_bat, 0777);
+    system("ln -s ".$epii_server_bat." /usr/local/bin/epii-server");
 
 }
 
