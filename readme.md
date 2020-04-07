@@ -43,7 +43,7 @@ linux unix 自动生成的文件为：
 
 全局命令可实现服务的快速启动，及应用的快速配置
 > linux unix 系统默认已经在全局PATH目录下
->window 需要把 /path/to/epii-server/bin 目录增加到系统全局path下
+> window 需要把 /path/to/epii-server/bin 目录增加到系统全局path下
 
 |命令|作用|
 |:---|:---|
