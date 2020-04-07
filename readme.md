@@ -60,7 +60,7 @@ linux unix 自动生成的文件为：
 |epii-server app info {appname}|应用详情|
 |epii-server domain list\ls|域名列表|
 |epii-server domain add {domain} {appname}|新增域名绑定|
-|epii-server domain remove {domain}|接触域名绑定|
+|epii-server domain remove {domain}|解除域名绑定|
 
 
 ### 配置文件（详细说明在下面）

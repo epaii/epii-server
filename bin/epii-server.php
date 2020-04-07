@@ -217,7 +217,7 @@ function do_help()
 "|epii-server app info|显示当前目录对应的应用信息|".PHP_EOL.
 "|epii-server domain list\ls|域名列表|".PHP_EOL.
 "|epii-server domain add {domain} {appname}|新增域名绑定|".PHP_EOL.
-"|epii-server domain remove {domain}|接触域名绑定|".PHP_EOL;
+"|epii-server domain remove {domain}|解除域名绑定|".PHP_EOL;
 
 }
 function do_start()
