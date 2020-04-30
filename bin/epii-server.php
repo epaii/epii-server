@@ -9,26 +9,29 @@ $config_file = $base_root . DIRECTORY_SEPARATOR . "config.ini";
 $host_file = is_win() ? 'C:/Windows/System32/drivers/etc/hosts' : '/etc/hosts';
 
 
-function config()
+function config($app_all = true)
 {
     global $config_file;
     static $config;
     if (!$config) {
         $config = parse_ini_file($config_file, true);
-        $www_dir = rtrim($config["server"]["www_dir"], "/");
-        if (isset($www_dir) && is_dir($www_dir)) {
-            $temp = scandir($www_dir);
-            foreach ($temp as $v) {
-                $a = $www_dir . '/' . $v;
-                if (is_dir($a)) {
+        if ($app_all) {
+            $www_dir = rtrim($config["server"]["www_dir"], "/");
+            if (isset($www_dir) && is_dir($www_dir)) {
+                $temp = scandir($www_dir);
+                foreach ($temp as $v) {
+                    $a = $www_dir . '/' . $v;
+                    if (is_dir($a)) {
 
-                    if ($v == '.' || $v == '..') {
-                        continue;
+                        if ($v == '.' || $v == '..') {
+                            continue;
+                        }
+                        $config["app_dir"][$v] = $a;
                     }
-                    $config["app_dir"][$v] = $a;
                 }
             }
         }
+
         foreach ($config as $key => $value) {
             foreach ($value as $k => $v) {
                 $config[$key][$k] = str_replace("\\", "/", $v);
@@ -56,7 +59,7 @@ function app_add($name, $dir)
 {
 
     global $config_file;
-    $config = config();
+    $config = config(false);
     $apps = $config["app_dir"];
     if (isset($apps[$name])) {
         show_error("Error:App is exist;" . $apps[$name]);
@@ -154,7 +157,7 @@ function app_open($name, $dir = null)
 function app_remove($name, $dir = null)
 {
     global $config_file;
-    $config = config();
+    $config = config(false);
     $apps = $config["app_dir"];
     if (!$dir) {
         $name = str_replace("\\", "/", $name);
