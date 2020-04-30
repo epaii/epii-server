@@ -276,9 +276,9 @@ function do_help()
         "|epii-server app opendir {appname}|打开指定应用目录|" . PHP_EOL .
         "|epii-server app dir {appname}|仅仅显示应用目录|" . PHP_EOL .
         "|epii-server hosts list\ls|本地域名列表|" . PHP_EOL .
-        "|epii-server hosts addall|本地域名全部添加|" . PHP_EOL .
-        "|epii-server hosts add {appname}|本地域名添加|" . PHP_EOL .
-        "|epii-server hosts clear|清除相关本地域名添加|" . PHP_EOL .
+        "|epii-server hosts addall|本地域名全部添加,需要管理员权限|" . PHP_EOL .
+        "|epii-server hosts add {appname}|本地域名添加,需要管理员权限|" . PHP_EOL .
+        "|epii-server hosts clear|清除相关本地域名添加,需要管理员权限|" . PHP_EOL .
         "|epii-server domain list\ls|域名列表|" . PHP_EOL .
         "|epii-server domain add {domain} {appname}|新增域名绑定|" . PHP_EOL .
         "|epii-server domain remove {domain}|解除域名绑定|" . PHP_EOL;
@@ -411,7 +411,7 @@ function app_opendir($name, $dir = null)
 
 
             if (is_win()) {
-                system("explorer " . str_replace("/","\\",$web["dir"]));
+                system("explorer " . str_replace("/", "\\", $web["dir"]));
             } else
                 system("open " . $web["dir"]);
         }
