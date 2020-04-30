@@ -6,7 +6,7 @@ $base_root = str_replace("\\", "/", $base_root);
 $is_win = strtoupper(substr(PHP_OS, 0, 3)) == 'WIN';
 $shall_ext = $is_win ? "bat" : "sh";
 $config_file = $base_root . DIRECTORY_SEPARATOR . "config.ini";
-$host_file = is_win() ? 'C:\Windows\System32\drivers\etc\hosts' : '/etc/hosts';
+$host_file = is_win() ? 'C:/Windows/System32/drivers/etc/hosts' : '/etc/hosts';
 
 
 function config()
@@ -348,7 +348,7 @@ function hosts_list()
 {
     print_r(initHosts());
 }
-function hosts_initall()
+function hosts_addall()
 {
     $hosts = initHosts();
     $config = config();
@@ -411,7 +411,7 @@ function app_opendir($name, $dir = null)
 
 
             if (is_win()) {
-                system("explorer " . $web["dir"]);
+                system("explorer " . str_replace("/","\\",$web["dir"]));
             } else
                 system("open " . $web["dir"]);
         }
