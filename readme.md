@@ -45,23 +45,31 @@ linux unix 自动生成的文件为：
 > linux unix 系统默认已经在全局PATH目录下
 > window 需要把 /path/to/epii-server/bin 目录增加到系统全局path下
 
-|命令|作用|
-|:---|:---|
-|epii-server help|支持的命令列表|
-|epii-server config|配置详情|
-|epii-server start|启动服务|
-|epii-server stop|暂停服务|
-|epii-server restart|重启启动服务|
-|epii-server app list/ls|显示所有应用|
-|epii-server app add {appname}|为当前目录为新应用|
-|epii-server app remove|删除当前目录对应的应用|
-|epii-server app remove {appname}|删除应用|
-|epii-server app info|显示当前目录对应的应用信息|
-|epii-server app info {appname}|应用详情|
-|epii-server domain list\ls|域名列表|
-|epii-server domain add {domain} {appname}|新增域名绑定|
-|epii-server domain remove {domain}|解除域名绑定|
-
+| 命令                                      | 作用                                    |
+| :---------------------------------------- | :-------------------------------------- |
+| epii-server help                          | 支持的命令列表                          |
+| epii-server config                        | 配置详情                                |
+| epii-server start                         | 启动服务                                |
+| epii-server stop                          | 暂停服务                                |
+| epii-server restart                       | 重启启动服务                            |
+| epii-server app list/ls                   | 显示所有应用                            |
+| epii-server app add {appname}             | 为当前目录为新应用                      |
+| epii-server app remove                    | 删除当前目录对应的应用                  |
+| epii-server app remove {appname}          | 删除应用                                |
+| epii-server app info                      | 显示当前目录对应的应用信息              |
+| epii-server app info {appname}            | 应用详情                                |
+| epii-server domain list\ls                | 域名列表                                |
+| epii-server domain add {domain} {appname} | 新增域名绑定                            |
+| epii-server domain remove {domain}        | 解除域名绑定                            |
+| epii-server app open                      | 打开当前目录对应的应用网址              |
+| epii-server app open {appname}            | 打开指定应用网址                        |
+| epii-server app opendir                   | 打开当前目录对应的目录                  |
+| epii-server app opendir {appname}         | 打开指定应用目录                        |
+| epii-server app dir {appname}             | 仅仅显示应用目录                        |
+| epii-server hosts list\ls                 | 本地域名列表                            |
+| epii-server hosts addall                  | 本地域名全部添加 （需要管理员权限）     |
+| epii-server hosts add {appname}           | 本地域名添加        （需要管理员权限）  |
+| epii-server hosts clear                   | 清除相关本地域名添加 （需要管理员权限） |
 
 ### 配置文件（详细说明在下面）
 

@@ -3,7 +3,7 @@
 this_ip = 192.169.0.169
 this_port = 80
 ;本机域名前缀
-domain_this = this.jt
+domain_this = epii.loc
 ;domain_other=other.jt
 ;web项目路径，此路径下每一个文件夹会当做一个应用，如果某一个项目不想放在此目录下，可以再app_dir中单独设置
 
