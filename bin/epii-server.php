@@ -279,8 +279,8 @@ function do_help()
         "|epii-server hosts addall|本地域名全部添加,需要管理员权限|" . PHP_EOL .
         "|epii-server hosts add {appname}|本地域名添加,需要管理员权限|" . PHP_EOL .
         "|epii-server hosts clear|清除相关本地域名添加,需要管理员权限|" . PHP_EOL .
-        "|epii-server domain list\ls|域名列表|" . PHP_EOL .
-        "|epii-server domain add {domain} {appname}|新增域名绑定|" . PHP_EOL .
+        "|epii-server domain list\ls|外网域名列表|" . PHP_EOL .
+        "|epii-server domain add {domain} {appname}|新增外网域名绑定|" . PHP_EOL .
         "|epii-server domain remove {domain}|解除域名绑定|" . PHP_EOL;
 }
 function do_start()

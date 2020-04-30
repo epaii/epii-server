@@ -58,9 +58,9 @@ linux unix 自动生成的文件为：
 | epii-server app remove {appname}          | 删除应用                                |
 | epii-server app info                      | 显示当前目录对应的应用信息              |
 | epii-server app info {appname}            | 应用详情                                |
-| epii-server domain list\ls                | 域名列表                                |
-| epii-server domain add {domain} {appname} | 新增域名绑定                            |
-| epii-server domain remove {domain}        | 解除域名绑定                            |
+| epii-server domain list\ls                | 外网域名列表                            |
+| epii-server domain add {domain} {appname} | 新增外网域名绑定                        |
+| epii-server domain remove {domain}        | 解除外网域名绑定                        |
 | epii-server app open                      | 打开当前目录对应的应用网址              |
 | epii-server app open {appname}            | 打开指定应用网址                        |
 | epii-server app opendir                   | 打开当前目录对应的目录                  |
