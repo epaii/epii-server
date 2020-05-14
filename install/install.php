@@ -39,7 +39,10 @@ if (!isset($ini['server']['domain_other'])) {
     $ini['server']['domain_other'] = "pc.jt";
 }
 if (!isset($ini['server']['www_dir'])) $ini['server']['www_dir'] = $base_root . DIRECTORY_SEPARATOR . "web";
-
+if(!( ( stripos($ini['server']['www_dir'],"/")===0) || ( stripos($ini['server']['www_dir'],":")===1 )))
+{
+    $ini['server']['www_dir'] = $base_root . DIRECTORY_SEPARATOR.$ini['server']['www_dir'];
+}
 
 $find = ["domain_app", "base_root", "this_ip", "this_port",  "nginx_root", "domain_this", "domain_other", "domain_this_1", "domain_other_1", "www_dir", "nginx_cmd", "php_cmd"];
 $replace = [implode(" ", array_keys($ini['domain_app'])), $base_root, $ini['server']['this_ip'], $ini['server']['this_port'], $ini['server']['nginx_root'], $ini['server']['domain_this'], $ini['server']['domain_other'], str_replace(".", "\\.", $ini['server']['domain_this']), str_replace(".", "\\.", $ini['server']['domain_other']), isset($ini['server']['www_dir']) ? $ini['server']['www_dir'] : $base_root . DIRECTORY_SEPARATOR . "web", $ini['nginx']['cmd'], $ini['server']['php_cmd']];

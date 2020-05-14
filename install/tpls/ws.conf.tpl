@@ -38,25 +38,7 @@ server {
         }
 
     set $app default;
-
-            # ---domain_when_ip---
-{{domain_when_ip}}
-#---domain_when_ipend---
-
-
-
-if ( $uri	~*  ^/app/([^\/]+)/$ ) {
-set $app $1;
-rewrite ^/app/([^\/]+)/$ /index.php;
-
-}
-if ( $uri	~*  ^/app/([^\/]+)/(.*)$ ) {
-set $app $1;
-rewrite ^/app/([^\/]+)/(.*)$ /$2;
-
-
-}
-
+ 
 
     set $app_sub -1;
     set $app_sub2 -1;
@@ -96,11 +78,47 @@ rewrite ^/app/([^\/]+)/(.*)$ /$2;
 {{domain_app_list}}
 #---domain_app---
 
+
+
+set $app_default 0;
+set $app_get 0;
+if ( $app ~*  ^default$ ) {
+   set $app_default 1;
+}
+
+   if ( $uri	~*  ^/app/([^\/]+)/$ ) {
+      set $app_get $1;
+       set $app_default 1$app_default;
+   }
+  if ( $app_default = 11 ){
+      set $app $app_get;
+       rewrite ^/app/([^\/]+)/$ /index.php;
+   }
+  set $app_default 0;
+if ( $app ~*  ^default$ ) {
+   set $app_default 1;
+}
+set $app_default_index 0;
+if ( $uri	~*  ^/app/([^\/]+)/(.*)$ ) {
+set $app_get $1;
+ set $app_default 1$app_default;
+ set $app_default_index $2;
+ 
+}
+  if ( $app_default = 11 ){
+       set $app $app_get;
+rewrite ^/app/([^\/]+)/(.*)$ /$app_default_index;
+  }
+
+# ---domain_when_ip---
+{{domain_when_ip}}
+#---domain_when_ipend---
+
     if ( $app !~* ^default$ ) {
         set $root $root/$app;
     }
 
-        # ---app_dir---
+# ---app_dir---
 {{app_dir}}
 #---app_dirend---
 
