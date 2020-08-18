@@ -57,10 +57,11 @@ if(isset($ini['server']['www_dir']) && is_dir($ini['server']['www_dir']))
                     
                     $this_ini = parse_ini_file($tmp_config_file,true );
                     if($this_ini){
-                        $this_ini = array_merge(["name"=>$item,"root"=>""],$this_ini);
-                        $ini['app_dir'][$this_ini["name"]] = $tmp_dir."/".$this_ini["root"];
+                        
+                        $this_ini = array_merge(["app"=>$item,"root"=>""],$this_ini);
+                        $ini['app_dir'][$this_ini["app"]] = $tmp_dir."/".$this_ini["root"];
                         if(isset($this_ini["php_select"])){
-                            $ini['app_php_select'][$this_ini["name"]] = $this_ini["php_select"];
+                            $ini['app_php_select'][$this_ini["app"]] = $this_ini["php_select"];
                         }
                         if(isset($this_ini["server_name"])){
                             $_domains= explode(" ",$this_ini["server_name"]);
@@ -68,7 +69,7 @@ if(isset($ini['server']['www_dir']) && is_dir($ini['server']['www_dir']))
                             {
                                 if($value=trim($value))
                                 {
-                                    $ini['domain_app'][$value] = $this_ini["name"];
+                                    $ini['domain_app'][$value] = $this_ini["app"];
                                 }
                             }
                             
@@ -188,7 +189,7 @@ $start_bat = $base_root . DIRECTORY_SEPARATOR . "default" . DIRECTORY_SEPARATOR 
 parse_tpl($start_tpl, $find, $replace, $start_bat);
 
 
-$start_tpl = $this_dir . DIRECTORY_SEPARATOR . "tpls" . DIRECTORY_SEPARATOR . 'start.bat.tpl';
+$start_tpl = $this_dir . DIRECTORY_SEPARATOR . "tpls" . DIRECTORY_SEPARATOR . 'start.'.$shall_ext.'.tpl';
 $start_bat = $base_root . DIRECTORY_SEPARATOR . "start." . $shall_ext;
 parse_tpl($start_tpl, ['php_cmd'], [$ini['server']['php_cmd']], $start_bat);
 
