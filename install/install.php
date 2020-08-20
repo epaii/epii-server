@@ -44,8 +44,12 @@ if(!( ( stripos($ini['server']['www_dir'],"/")===0) || ( stripos($ini['server'][
     $ini['server']['www_dir'] = $base_root . DIRECTORY_SEPARATOR.$ini['server']['www_dir'];
 }
 
-if(isset($ini['server']['www_dir']) && is_dir($ini['server']['www_dir']))
+if(isset($ini['server']['www_dir']) )
 {
+    if(!is_dir($ini['server']['www_dir']))
+    {
+        mkdir($ini['server']['www_dir'],0777,true);
+    }
     $file_arr = scandir($ini['server']['www_dir']);
     
     foreach($file_arr as $item){
