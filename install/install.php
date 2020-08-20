@@ -216,15 +216,13 @@ parse_tpl($epii_server_tpl, $find, $replace, $epii_server_bat);
 
 if (!$is_win) {
     // chmod($re_install_bat,777);
-
-
-
+ 
     chmod($staop_bat, 0777);
     chmod($start_bat, 0777);
     chmod($nignx_config, 0777);
     chmod($epii_server_bat, 0777);
-    if(!file_exists("/usr/local/bin/epii-server"))
-    system("ln -s ".$epii_server_bat." /usr/local/bin/epii-server");
+   // if(!file_exists("/usr/local/bin/epii-server"))
+    system("ln -snf ".$epii_server_bat." /usr/local/bin/epii-server");
 
 }
 
