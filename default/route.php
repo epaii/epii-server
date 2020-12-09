@@ -1,4 +1,5 @@
 <?php
+error_reporting(0);
 if (!$_ENV) {
     echo "It is need set variables_order = \"EGPCS\"  in php.ini";
     exit;

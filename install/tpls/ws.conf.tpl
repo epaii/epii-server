@@ -2,41 +2,8 @@
 resolver 8.8.8.8 ipv6=off;
 
 server {
-    listen {{this_port}};
+    {{http_or_https}}
     server_name *.{{domain_this}} {{this_ip}} {{domain_app}};
-
-     location ~ .*/_s1/([^\/]+)/_s2/([^\/]+)/_s3/([^\/]+)/(.*)$ {
-            rewrite .*/_s1/([^\/]+)/_s2/([^\/]+)/_s3/([^\/]+)/(.*)$ /$4 break;
-            proxy_pass http://$1.$2.$3.{{domain_this}}:{{this_port}};
-            proxy_set_header HOST   $1.$2.$3.{{domain_this}}:{{this_port}};
-            proxy_set_header X-Real-IP   $remote_addr;
-            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        }
-
-        location ~ .*/_s1/([^\/]+)/_s2/([^\/]+)/(.*)$ {
-            rewrite .*/_s1/([^\/]+)/_s2/([^\/]+)/(.*)$ /$3 break;
-            proxy_pass http://$1.$2.{{domain_this}}:{{this_port}};
-            proxy_set_header HOST   $1.$2.{{domain_this}}:{{this_port}};
-            proxy_set_header X-Real-IP   $remote_addr;
-            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        }
-
-        location ~ .*/_s1/([^\/]+)/(.*)$ {
-            rewrite .*/_s1/([^\/]+)/(.*)$ /$2 break;
-            proxy_pass http://$1.{{domain_this}}:{{this_port}};
-            proxy_set_header HOST   $1.{{domain_this}}:{{this_port}};
-            proxy_set_header X-Real-IP   $remote_addr;
-            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        }
-
-        location ~ .*/_app/([^\/]+)/(.*)$ {
-        rewrite .*/_app/([^\/]+)/(.*)$ /$2 break;
-        proxy_pass http://$1.{{domain_this}}:{{this_port}};
-        proxy_set_header HOST   $1.{{domain_this}}:{{this_port}};
-        proxy_set_header X-Real-IP   $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        }
-
     set $app default;
  
 
@@ -44,9 +11,6 @@ server {
     set $app_sub2 -1;
     set $app_sub3 -1;
     set $base_root  {{base_root}};
-
-
-
 
 
     set $root {{www_dir}};
@@ -202,44 +166,6 @@ rewrite ^/app/([^\/]+)/(.*)$ /$app_default_index;
 	}
 
 }
-
-server {
-    listen {{this_port}};
-    server_name *.{{domain_other}};
-
-    set $toip   127.0.0.1;
-    access_log {{base_root}}/logs/nginx.access.log;
-    error_log {{base_root}}/logs/nginx.error.log;
-
-
-    if ( $host ~*  ^([^\.]+)\.([^\.]+)\.([^\.]+)\.([^\.]+)\.([^\.]+)\.([^\.]+)\. ) {
-        set $my_host   $2.$3.$4.$5:$6;
-        set $toip    $my_host/_s1/$1$request_uri;
-    }
-    if ( $host ~*  ^([^\.]+)\.([^\.]+)\.([^\.]+)\.([^\.]+)\.([^\.]+)\.([^\.]+)\.([^\.]+)\. ) {
-        set $my_host   $3.$4.$5.$6:$7;
-        set $toip    $my_host/_s1/$1/_s2/$2$request_uri;
-    }
-    if ( $host ~*  ^([^\.]+)\.([^\.]+)\.([^\.]+)\.([^\.]+)\.([^\.]+)\.([^\.]+)\.([^\.]+)\.([^\.]+)\. ) {
-        set $my_host   $4.$5.$6.$7:$8;
-        set $toip    $my_host/_s1/$1/_s2/$2/_s3/$3$request_uri;
-    }
-    location / {
-        proxy_pass http://$toip;
-        proxy_set_header Host    $my_host;
-        proxy_set_header X-Real-IP   $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-    }
-
-
-
-
-
-
-
-}
-
-
 
 
 

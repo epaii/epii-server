@@ -2,6 +2,7 @@
 ;本机ip地址和端口
 this_ip = 192.169.0.169
 this_port = 80
+this_ssl_port =8433
 ;本机域名前缀
 domain_this = epii.loc
 ;domain_other=other.jt
@@ -22,7 +23,8 @@ nginx_config_file = /usr/local/etc/nginx/nginx.conf
 ;window下 php-cgi.exe 的路径，linux 下 php-fpm 路径
 php_cgi[0] = /usr/local/Cellar/php\@7.1/7.1.19/sbin/php-fpm
 ;如果使用php-cgi，设置的端口将被启用。如果是php-fpm 请确保此端口和php-fpm.conf中一致（php-fpm.conf 需手动修改，多个php版本一定要设置不同的端口）
-port[0] = 9000 //如果是unix则使用   socket[0] = "unix:/var/run/php-fpm.sock"
+port[0] = 9000 
+;如果是unix则使用   socket[0] = "unix:/var/run/php-fpm.sock"
 php_cgi[1] = php-fpm
 socket[1] = "unix:/var/run/php-fpm.sock"
 [app_dir]
