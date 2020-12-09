@@ -3,7 +3,9 @@
 this_ip = 192.169.0.169
 this_port = 80
 this_ssl_port =433
+;设置https的证书的目录，只需要以host为名称就可以，比如a.dd.com.pem a.dd.com.key
 this_ssl_certs_dir =certs
+;如果某一个域名开启了https是否域名仅仅能通过https访问
 this_ssl_must =on
 ;本机域名前缀
 domain_this = epii.loc
