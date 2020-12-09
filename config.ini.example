@@ -10,7 +10,7 @@ domain_this = epii.loc
 
 ;www_dir 为网站根目录，默认为web目录，如果设置请设置绝对路径
 ;www_dir = /Users/mrren/Documents/phpworkspace/EpiiWeb/web
-
+;log_dir=/
 ;;default_app = web1
 ;本程序以php为脚本安装和启动服务，指定php命令地址，一般为php.exe的文件路径
 php_cmd=php

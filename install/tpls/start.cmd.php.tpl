@@ -15,7 +15,7 @@ if (!file_exists($config_file)) {
     echo "It is not find config.ini,You can copy config.ini.example to config.ini  to set you config";
     exit;
 }
-if (filemtime($config_file) > $time) {
+if (true || (filemtime($config_file) > $time)) {
 echo "re install \n";
 $include_file = __DIR__.DIRECTORY_SEPARATOR.".." . DIRECTORY_SEPARATOR . "install" . DIRECTORY_SEPARATOR . "install.php";
 require $include_file;

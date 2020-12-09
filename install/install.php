@@ -40,9 +40,59 @@ if (!((stripos($ini['server']['www_dir'], "/") === 0) || (stripos($ini['server']
     $ini['server']['www_dir'] = $base_root . DIRECTORY_SEPARATOR . $ini['server']['www_dir'];
 }
 
-if (!isset($ini['server']['this_ssl_certs_dir'])) $ini['server']['this_ssl_certs_dir'] = $base_root . DIRECTORY_SEPARATOR . "certs";
-if (!((stripos($ini['server']['this_ssl_certs_dir'], "/") === 0) || (stripos($ini['server']['this_ssl_certs_dir'], ":") === 1))) {
-    $ini['server']['this_ssl_certs_dir'] = $base_root . DIRECTORY_SEPARATOR . $ini['server']['this_ssl_certs_dir'];
+if(isset($ini['server']['www_dir']) )
+{
+    if(!is_dir($ini['server']['www_dir']))
+    {
+        mkdir($ini['server']['www_dir'],0777,true);
+    }
+    $file_arr = scandir($ini['server']['www_dir']);
+    
+    foreach($file_arr as $item){
+
+        if($item!=".." && $item !="."){
+
+            if(is_dir($tmp_dir = $ini['server']['www_dir']."/".$item)){
+                if(file_exists($tmp_config_file =$tmp_dir."/epii-server.ini" )){
+                    
+                    $this_ini = parse_ini_file($tmp_config_file,true );
+                    if($this_ini){
+                        
+                        $this_ini = array_merge(["app"=>$item,"root"=>""],$this_ini);
+                        $ini['app_dir'][$this_ini["app"]] = $tmp_dir."/".$this_ini["root"];
+                        if(isset($this_ini["php_select"])){
+                            $ini['app_php_select'][$this_ini["app"]] = $this_ini["php_select"];
+                        }
+                        if(isset($this_ini["server_name"])){
+                            $_domains= explode(" ",$this_ini["server_name"]);
+                            foreach($_domains as $value)
+                            {
+                                if($value=trim($value))
+                                {
+                                    $ini['domain_app'][$value] = $this_ini["app"];
+                                }
+                            }
+                            
+                        }
+                    }
+                }
+
+            } 
+        }
+    }
+}
+
+$log_dir = isset($ini["server"]["log_dir"])?$ini["server"]["log_dir"]:($base_root."/logs");
+if(!is_dir($log_dir)){
+    mkdir($log_dir,0777,true);
+}
+ 
+$find = ["domain_app", "base_root", "this_ip", "this_port",  "nginx_root", "domain_this", "domain_other", "domain_this_1", "domain_other_1", "www_dir", "nginx_cmd", "php_cmd"];
+$replace = [implode(" ", array_keys($ini['domain_app'])), $base_root, $ini['server']['this_ip'], $ini['server']['this_port'], $ini['server']['nginx_root'], $ini['server']['domain_this'], $ini['server']['domain_other'], str_replace(".", "\\.", $ini['server']['domain_this']), str_replace(".", "\\.", $ini['server']['domain_other']), isset($ini['server']['www_dir']) ? $ini['server']['www_dir'] : $base_root . DIRECTORY_SEPARATOR . "web", $ini['nginx']['cmd'], $ini['server']['php_cmd']];
+
+$root_dir = "";
+foreach ($ini['root_dir'] as $key => $value) {
+    $root_dir .= parse_tpl($this_dir . DIRECTORY_SEPARATOR . "tpls" . DIRECTORY_SEPARATOR . "nginx_root_dir.tpl", ["app", "dir"], [$key, $value]);
 }
 
 
@@ -158,7 +208,7 @@ $start_bat = $base_root . DIRECTORY_SEPARATOR . "default" . DIRECTORY_SEPARATOR 
 parse_tpl($start_tpl, $find, $replace, $start_bat);
 
 
-$start_tpl = $this_dir . DIRECTORY_SEPARATOR . "tpls" . DIRECTORY_SEPARATOR . 'start.bat.tpl';
+$start_tpl = $this_dir . DIRECTORY_SEPARATOR . "tpls" . DIRECTORY_SEPARATOR . 'start.'.$shall_ext.'.tpl';
 $start_bat = $base_root . DIRECTORY_SEPARATOR . "start." . $shall_ext;
 parse_tpl($start_tpl, ['php_cmd'], [$ini['server']['php_cmd']], $start_bat);
 
@@ -177,14 +227,14 @@ parse_tpl($epii_server_tpl, $find, $replace, $epii_server_bat);
 
 if (!$is_win) {
     // chmod($re_install_bat,777);
-
-
-
+ 
     chmod($staop_bat, 0777);
     chmod($start_bat, 0777);
     chmod($nignx_config, 0777);
     chmod($epii_server_bat, 0777);
-    system("ln -s " . $epii_server_bat . " /usr/local/bin/epii-server");
+   // if(!file_exists("/usr/local/bin/epii-server"))
+    system("ln -snf ".$epii_server_bat." /usr/local/bin/epii-server");
+
 }
 
 $lock_file = __DIR__ . DIRECTORY_SEPARATOR . ".time";

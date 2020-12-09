@@ -25,6 +25,7 @@ unset($_ENV['SCRIPT_FILENAME_origin']);
 unset($_SERVER['SCRIPT_FILENAME_origin']);
 unset($_ENV['APP_JT']);
 unset($_SERVER['APP_JT']);
+ 
 if(file_exists($root_file = "./" . basename($_ENV['SCRIPT_NAME']))){
     require_once $root_file;
 }else{
