@@ -2,7 +2,9 @@
 ;本机ip地址和端口
 this_ip = 192.169.0.169
 this_port = 80
-this_ssl_port =8433
+this_ssl_port =433
+this_ssl_certs_dir =certs
+this_ssl_must =on
 ;本机域名前缀
 domain_this = epii.loc
 ;domain_other=other.jt
