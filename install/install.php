@@ -44,6 +44,9 @@ function parse_dir($name, $dvalue)
     if (!((stripos($ini['server'][$name], "/") === 0) || (stripos($ini['server'][$name], ":") === 1))) {
         $ini['server'][$name] = $base_root . DIRECTORY_SEPARATOR . $ini['server'][$name];
     }
+    if (!is_dir($ini['server'][$name])) {
+        mkdir($ini['server'][$name], 0777, true);
+    }
 
 }
 parse_dir("www_dir", "web");
