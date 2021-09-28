@@ -47,3 +47,11 @@ epiiadmin[db_hostname] = zhengxin
 [domain_app]
 ziyuan.loc=ziyuan
 ziyuan1.loc=ziyuan
+[app_proxy_pass]
+proxy1=http://127.0.0.1:8880
+[domain_proxy_pass]
+ssss.eee.ddd.ccc.ddd=http://127.0.0.1:8880
+ssss.eee.ddd.ccc.eee=http://127.0.0.1:8880
+[app_spring_boot]
+spring_test=/Volumes/class1-1.0-SNAPSHOT.jar
+[end]
