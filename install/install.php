@@ -19,6 +19,18 @@ foreach ($ini as $key => $value) {
         $ini[$key][$k] = str_replace("\\", "/", $v);
     }
 }
+if (!isset($ini["app_proxy_pass"])) {
+    $ini["app_proxy_pass"] = [];
+}
+if (!isset($ini["domain_proxy_pass"])) {
+    $ini["domain_proxy_pass"] = [];
+}
+
+if (!isset($ini["app_spring_boot"])) {
+    $ini["app_spring_boot"] = [];
+}
+
+
 
 if ($is_win) {
     $ini['server']['nginx_root'] = " -p " . dirname($ini['nginx']['cmd']);
@@ -47,7 +59,6 @@ function parse_dir($name, $dvalue)
     if (!is_dir($ini['server'][$name])) {
         mkdir($ini['server'][$name], 0777, true);
     }
-
 }
 parse_dir("www_dir", "web");
 if (isset($ini['server']['www_dir'])) {
@@ -66,27 +77,84 @@ if (isset($ini['server']['www_dir'])) {
                     $this_ini = parse_ini_file($tmp_config_file, true);
                     if ($this_ini) {
 
-                        $this_ini = array_merge(["app" => $item, "root" => ""], $this_ini);
-                        $ini['app_dir'][$this_ini["app"]] = $tmp_dir . "/" . $this_ini["root"];
-                        if (isset($this_ini["php_select"])) {
-                            $ini['app_php_select'][$this_ini["app"]] = $this_ini["php_select"];
-                        }
-                        if (isset($this_ini["server_name"])) {
-                            $_domains = explode(" ", $this_ini["server_name"]);
-                            foreach ($_domains as $value) {
-                                if ($value = trim($value)) {
-                                    $ini['domain_app'][$value] = $this_ini["app"];
+                        $this_ini = array_merge(["app" => $item, "root" => "", "app_type" => "php_web"], $this_ini);
+
+
+                        if ($this_ini["app_type"] == "php_web") {
+                            $ini['app_dir'][$this_ini["app"]] = $tmp_dir . "/" . $this_ini["root"];
+                            if (isset($this_ini["php_select"])) {
+                                $ini['app_php_select'][$this_ini["app"]] = $this_ini["php_select"];
+                            }
+                            if (isset($this_ini["server_name"])) {
+                                $_domains = explode(" ", $this_ini["server_name"]);
+                                foreach ($_domains as $value) {
+                                    if ($value = trim($value)) {
+                                        $ini['domain_app'][$value] = $this_ini["app"];
+                                    }
                                 }
                             }
-
+                        } else if ($this_ini["app_type"] == "proxy") {
+                            if (isset($this_ini["proxy_pass"])) {
+                                if (isset($this_ini["server_name"])) {
+                                    $_domains = explode(" ", $this_ini["server_name"]);
+                                    foreach ($_domains as $value) {
+                                        if ($value = trim($value)) {
+                                            $ini['domain_proxy_pass'][$value] = $this_ini["proxy_pass"];
+                                        }
+                                    }
+                                }else{
+                                    $ini["app_proxy_pass"][$this_ini["app"]] = $this_ini["proxy_pass"];
+                                }
+                                
+                            } else {
+                                echo $this_ini["app"] . " : app_type need set proxy_pass" . PHP_EOL;
+                                exit;
+                            }
+                            
+                        } else if ($this_ini["app_type"] == "spring_boot_web") {
+                            if (isset($this_ini["jar"])) {
+                                $ini["app_spring_boot"][$this_ini["app"]] = $tmp_dir . "/" . $this_ini["jar"];
+                            } else {
+                                echo $this_ini["app"] . " : app_type need set jar" . PHP_EOL;
+                                exit;
+                            }
+                            if (isset($this_ini["server_name"])) {
+                                $_domains = explode(" ", $this_ini["server_name"]);
+                                foreach ($_domains as $value) {
+                                    if ($value = trim($value)) {
+                                        $ini['domain_proxy_pass'][$value] = $this_ini["app"];
+                                    }
+                                }
+                            }
                         }
+
+
+ 
                     }
                 }
-
             }
         }
     }
 }
+
+
+$spring_port_begin = 0;
+$ini["app_spring_boot_info"] =[];
+foreach ($ini["app_spring_boot"] as $key => $value) {
+    $port = 7888+$spring_port_begin;
+    $ini["app_spring_boot_info"][$key] =["jar"=>$value,"port"=> $port];
+    $spring_port_begin++;
+
+
+    if(isset($ini['domain_proxy_pass'][$key])){
+        $ini['domain_proxy_pass'][$key] = "http://127.0.0.1:". $port."/";
+    }else{
+        $ini['app_proxy_pass'][$key]="http://127.0.0.1:". $port."/";
+    }
+
+   
+}
+
 
 parse_dir("this_ssl_certs_dir", "certs");
 
@@ -140,7 +208,6 @@ foreach ($ini['domain_app'] as $key => $value) {
         if (!$appinfo[$i]) {
             $appinfo[$i] = -1;
         }
-
     }
     $domain_app_list .= parse_tpl($this_dir . DIRECTORY_SEPARATOR . "tpls" . DIRECTORY_SEPARATOR . "nginx_domain_app.tpl", ["domain", "app", "app_sub", "app_sub2", "app_sub3"], [$key, $appinfo[0], $appinfo[1], $appinfo[2], $appinfo[3]]);
 }
@@ -159,52 +226,83 @@ if (isset($ini['php']['port'][0])) {
 }
 
 $php_port = "";
-    foreach ($ini['app_php_select'] as $key => $value) {
-        if (isset($ini['php']['port'][$value])) {
-            $php_port .= parse_tpl($this_dir . DIRECTORY_SEPARATOR . "tpls" . DIRECTORY_SEPARATOR . "nginx_php_port.tpl", ["app", "port"], [$key, $ini['php']['port'][$value]]);
-        } else if (isset($ini['php']['socket'][$value])) {
-            $php_port .= parse_tpl($this_dir . DIRECTORY_SEPARATOR . "tpls" . DIRECTORY_SEPARATOR . "nginx_php_socket.tpl", ["app", "socket"], [$key, $ini['php']['socket'][$value]]);
-        }
+foreach ($ini['app_php_select'] as $key => $value) {
+    if (isset($ini['php']['port'][$value])) {
+        $php_port .= parse_tpl($this_dir . DIRECTORY_SEPARATOR . "tpls" . DIRECTORY_SEPARATOR . "nginx_php_port.tpl", ["app", "port"], [$key, $ini['php']['port'][$value]]);
+    } else if (isset($ini['php']['socket'][$value])) {
+        $php_port .= parse_tpl($this_dir . DIRECTORY_SEPARATOR . "tpls" . DIRECTORY_SEPARATOR . "nginx_php_socket.tpl", ["app", "socket"], [$key, $ini['php']['socket'][$value]]);
     }
-     
-    $find[] = "php_port";
-    $replace[] = $php_port;
+}
 
- 
- $nignx_config_common = parse_tpl($this_dir . DIRECTORY_SEPARATOR . "tpls" . DIRECTORY_SEPARATOR . 'ws.conf.common.tpl',$find,$replace);
+$find[] = "php_port";
+$replace[] = $php_port;
+
+//proxy　
+
+$proxy_pass = "";
+foreach ($ini['app_proxy_pass'] as $key => $value) {
+    
+    $proxy_pass .= parse_tpl($this_dir . DIRECTORY_SEPARATOR . "tpls" . DIRECTORY_SEPARATOR . "nginx_app_proxy_pass.tpl", ["app", "proxy_pass"], [$key, $value]);
+   
+}
+
+$find[] = "app_proxy_pass";
+$replace[] = $proxy_pass;
+
+
+
+
+$nignx_config_common = parse_tpl($this_dir . DIRECTORY_SEPARATOR . "tpls" . DIRECTORY_SEPARATOR . 'ws.conf.common.tpl', $find, $replace);
 
 $nignx_config_tpl = $this_dir . DIRECTORY_SEPARATOR . "tpls" . DIRECTORY_SEPARATOR . 'ws.conf.tpl';
 
 function http_or_https($is_https)
 {
-    global $ini,$nignx_config_tpl,$this_dir,$nignx_config_common;
-    $find[] ="nignx_config_common";
-    $replace[]=$nignx_config_common;
-    if(!$is_https){
+    global $ini, $nignx_config_tpl, $this_dir, $nignx_config_common;
+    $find[] = "nignx_config_common";
+    $replace[] = $nignx_config_common;
+    if (!$is_https) {
         $find[] = "http_or_https";
         $replace[] = " listen " . $ini["server"]["this_port"] . ";";
         return parse_tpl($nignx_config_tpl, $find, $replace);
-    }else{
+    } else {
         $certs_dir = $ini["server"]["this_ssl_certs_dir"];
-        if(isset($ini["server"]["this_ssl_port"]) && file_exists($certs_dir ))
-        {
+        if (isset($ini["server"]["this_ssl_port"]) && file_exists($certs_dir)) {
             $find[] = "http_or_https";
-            $replace[] = parse_tpl($this_dir . DIRECTORY_SEPARATOR . "tpls" . DIRECTORY_SEPARATOR . "ws.conf.https.tpl", ["this_port","this_ssl_certs_dir"], [$ini["server"]["this_ssl_port"],$ini["server"]["this_ssl_certs_dir"]]);
+            $replace[] = parse_tpl($this_dir . DIRECTORY_SEPARATOR . "tpls" . DIRECTORY_SEPARATOR . "ws.conf.https.tpl", ["this_port", "this_ssl_certs_dir"], [$ini["server"]["this_ssl_port"], $ini["server"]["this_ssl_certs_dir"]]);
             return parse_tpl($nignx_config_tpl, $find, $replace);
-        }else{
+        } else {
             return "";
         }
-       
     }
-    
-   
 }
 
 //https 处理
 
 $nignx_config = $base_root . DIRECTORY_SEPARATOR . "configs" . DIRECTORY_SEPARATOR . "nginx" . DIRECTORY_SEPARATOR . 'ws.conf';
- 
-file_put_contents($nignx_config ,file_get_contents($this_dir . DIRECTORY_SEPARATOR . "tpls" . DIRECTORY_SEPARATOR . "ws.conf.all.tpl")."\n".http_or_https(false)."\n".http_or_https(true));
+
+file_put_contents($nignx_config, file_get_contents($this_dir . DIRECTORY_SEPARATOR . "tpls" . DIRECTORY_SEPARATOR . "ws.conf.all.tpl") . "\n" . http_or_https(false) . "\n" . http_or_https(true));
+
+
+// domain——proxy app支持
+$nignx_config_domain_pass = $base_root . DIRECTORY_SEPARATOR . "configs" . DIRECTORY_SEPARATOR . "nginx" . DIRECTORY_SEPARATOR . 'proxypass.conf';
+$nignx_config_domain_pass_content = "";
+foreach($ini['domain_proxy_pass'] as $domain=>$topass){
+    $this_find =["domain_app","this_port","proxy_pass"];
+    $this_replace=[$domain,$ini["server"]["this_port"],$topass];
+    $certs_dir = $ini["server"]["this_ssl_certs_dir"];
+
+    if (isset($ini["server"]["this_ssl_port"]) && file_exists($certs_dir)) {
+        $this_find[] = "https";
+        $this_replace[] = parse_tpl($this_dir . DIRECTORY_SEPARATOR . "tpls" . DIRECTORY_SEPARATOR . "ws.conf.https.tpl", ["this_port", "this_ssl_certs_dir"], [$ini["server"]["this_ssl_port"], $ini["server"]["this_ssl_certs_dir"]]);
+       
+    }
+    $nignx_config_domain_pass_content .= parse_tpl($this_dir . DIRECTORY_SEPARATOR . "tpls" . DIRECTORY_SEPARATOR . "nginx_app_domain_proxy_pass.tpl", $this_find, $this_replace);
+}
+file_put_contents($nignx_config_domain_pass,$nignx_config_domain_pass_content);
+
+
+
 
 $nignx_config_root = $ini['nginx']['nginx_config_file']; #$ini['server']['nginx_root'] . DIRECTORY_SEPARATOR . "conf" . DIRECTORY_SEPARATOR . "nginx.conf";
 if (!is_file($nignx_config_root)) {
@@ -219,6 +317,9 @@ $pd = str_replace(DIRECTORY_SEPARATOR, "/", $pd);
 $myconfig = str_replace($pd, "", $myconfig);
 file_put_contents($nignx_config_root, $myconfig . "\r\n" . $pd . "\r\n}");
 
+
+//启动命令php
+
 $php_bat = "";
 foreach ($ini['php']['php_cgi'] as $key => $value) {
     $php_bat .= parse_tpl($this_dir . DIRECTORY_SEPARATOR . "tpls" . DIRECTORY_SEPARATOR . "start.php.tpl", ["base_root", "i", "port", "root", "cmd"], [$base_root, $key, $ini['php']['port'][$key], dirname($value), $value]);
@@ -227,10 +328,23 @@ foreach ($ini['php']['php_cgi'] as $key => $value) {
 $find[] = "php_bat";
 $replace[] = $php_bat;
 
+
+//增加java程序的启动
+$java_bat = "";
+foreach ($ini['app_spring_boot_info'] as $key => $value) {
+    $java_bat .= parse_tpl($this_dir . DIRECTORY_SEPARATOR . "tpls" . DIRECTORY_SEPARATOR . "start.java.tpl", ["java", "key", "port", "jar"], [$is_win?$ini["server"]["java_cmd"]:("nohup ".$ini["server"]["java_cmd"]), $key, $value["port"], $value["jar"]]);
+}
+
+$find[] = "java_bat";
+$replace[] = $java_bat;
+
+
 $start_tpl = $this_dir . DIRECTORY_SEPARATOR . "tpls" . DIRECTORY_SEPARATOR . 'start.cmd.php.tpl';
 $start_bat = $base_root . DIRECTORY_SEPARATOR . "default" . DIRECTORY_SEPARATOR . "start.php";
 parse_tpl($start_tpl, $find, $replace, $start_bat);
 
+
+//启动脚本
 $start_tpl = $this_dir . DIRECTORY_SEPARATOR . "tpls" . DIRECTORY_SEPARATOR . 'start.' . $shall_ext . '.tpl';
 $start_bat = $base_root . DIRECTORY_SEPARATOR . "start." . $shall_ext;
 parse_tpl($start_tpl, ['php_cmd'], [$ini['server']['php_cmd']], $start_bat);
@@ -255,7 +369,6 @@ if (!$is_win) {
     chmod($epii_server_bat, 0777);
     // if(!file_exists("/usr/local/bin/epii-server"))
     system("ln -snf " . $epii_server_bat . " /usr/local/bin/epii-server");
-
 }
 
 $lock_file = __DIR__ . DIRECTORY_SEPARATOR . ".time";
@@ -278,7 +391,7 @@ function parse_tpl($tpl_file, $find, $replace, $to_file = null)
             $find[$key] = "{{" . $value . "}}";
         }
     }
-    
+
     $txt = str_replace($find, $replace, file_get_contents($tpl_file));
     if ($to_file) {
         if (!is_dir($todir = dirname($to_file))) {

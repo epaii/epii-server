@@ -1,4 +1,9 @@
     server_name *.{{domain_this}} {{this_ip}} {{domain_app}};
+
+# ---app_proxy_pass---
+{{app_proxy_pass}}
+#---app_proxy_pass---
+
     set $app default;
  
     set $app_sub -1;
@@ -35,6 +40,7 @@
 # ---domain_app---
 {{domain_app_list}}
 #---domain_app---
+
 
 
 

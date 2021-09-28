@@ -1,3 +1,3 @@
-{{php_cmd}} ./default/start.php
+{{php_cmd}} ./default/run.php
 
  

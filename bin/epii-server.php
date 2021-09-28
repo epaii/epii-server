@@ -230,7 +230,12 @@ function domain_add($name, $app)
             $string[] = $key . "=" . $value;
         }
         $file_content = file_get_contents($config_file);
-        $file_content = preg_replace("/\[domain_app\](.*?)$/is", "[domain_app]" . PHP_EOL . implode(PHP_EOL, $string), $file_content);
+        if(strpos($file_content,"[end]")>0){
+            $file_content = preg_replace("/\[domain_app\](.*?)\[/is", "[domain_app]" . PHP_EOL . implode(PHP_EOL, $string).PHP_EOL."[", $file_content);
+        }else{
+            $file_content = preg_replace("/\[domain_app\](.*?)$/is", "[domain_app]" . PHP_EOL . implode(PHP_EOL, $string), $file_content);
+        }
+        
         file_put_contents($config_file, $file_content);
         show_success("创建成功");
     }

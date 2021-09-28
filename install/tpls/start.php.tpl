@@ -1,5 +1,5 @@
 
-echo "start phpcgi{{i}}\n";
+echo "start phpcgi:{{i}}\n";
 if($is_win)
 {
 //php-cgi-spawner.exe "php/php-cgi.exe -c php/php.ini" 9000 4+16
