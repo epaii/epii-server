@@ -18,9 +18,9 @@ function app_stop() {
         exit
     fi
     if [ "$(uname)" == "Darwin" ]; then
-        ps -ef | grep "app-of-"$1 | grep -v grep | awk '{print $2}' | xargs kill
+        ps -ef | grep "app-of-"$1 | grep -v grep | awk '{print $2}' | xargs kill > /dev/null 2>&1
     else
-        ps -ef | grep "app-of-"$1 | grep -v grep | awk '{print $2}' | xargs kill -9
+        ps -ef | grep "app-of-"$1 | grep -v grep | awk '{print $2}' | xargs kill -9 > /dev/null 2>&1
     fi
 
 }
