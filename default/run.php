@@ -30,7 +30,16 @@ function runcmd($cmd)
         //var_dump($pid = shell_exec($cmd . " && echo $!"));
     }
 }
- 
+function runcmd_log($cmd)
+{
+
+    if (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN') {
+        pclose(popen('start /B ' . $cmd, 'r'));
+    } else {
+        pclose(popen($cmd." 2>&1 &", 'r'));
+       
+    }
+}
 require_once __DIR__."/start.php";
 
 exit;

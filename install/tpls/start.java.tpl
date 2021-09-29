@@ -1,5 +1,5 @@
 
 echo "start {{jar}}:{{port}}\n";
-runcmd('{{java}} -jar {{jar}} --server.port={{port}} --from-epii-server');
+runcmd_log('{{java}} -jar {{jar}} --server.port={{port}} --from-epii-server {{log}} ');
 
 
