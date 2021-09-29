@@ -367,7 +367,7 @@ parse_tpl($start_tpl, $find, $replace, $start_bat);
 
 $init_file = "";
 
-if(file_exists($base_root.DIRECTORY_SEPARATOR."bin".DIRECTORY_SEPARATOR."init.sh")){
+if(file_exists(__DIR__.DIRECTORY_SEPARATOR."../bin".DIRECTORY_SEPARATOR."init.sh")){
     $init_file = "source ".$base_root.DIRECTORY_SEPARATOR."bin".DIRECTORY_SEPARATOR."init.sh";
    // echo $base_root.DIRECTORY_SEPARATOR."bin".DIRECTORY_SEPARATOR."init.sh";
 }
