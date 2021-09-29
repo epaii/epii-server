@@ -14,6 +14,10 @@ $is_win = strtoupper(substr(PHP_OS, 0, 3)) == 'WIN';
 $shall_ext = $is_win ? "bat" : "sh";
 $_SERVER['_'] = getPhp();
 $ini = parse_ini_file($base_root . DIRECTORY_SEPARATOR . "config.ini", true);
+
+
+
+
 foreach ($ini as $key => $value) {
     foreach ($value as $k => $v) {
         $ini[$key][$k] = str_replace("\\", "/", $v);
@@ -61,6 +65,23 @@ function parse_dir($name, $dvalue)
     }
 }
 parse_dir("www_dir", "web");
+
+$web_ini_file = $ini['server']['www_dir'].DIRECTORY_SEPARATOR."epii-server.ini";
+if(file_exists($web_ini_file)){
+    $web_ini = parse_ini_file($web_ini_file, true);
+    if($web_ini)
+    {
+        foreach($web_ini as $key=>$values){
+            if($values){
+                foreach ($values as $key1 => $value1) {
+                    $ini[$key][$key1] = $value1;
+                }
+            }
+        }
+    }
+
+}
+ 
 if (isset($ini['server']['www_dir'])) {
     if (!is_dir($ini['server']['www_dir'])) {
         mkdir($ini['server']['www_dir'], 0777, true);
