@@ -11,3 +11,5 @@ deploy
 .time
 readme.tuiguang.md
 /certs/*
+/logs
+runtime.json

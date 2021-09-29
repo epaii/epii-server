@@ -49,6 +49,7 @@ if (!isset($ini['server']['php_cmd'])) {
 if (!isset($ini['server']['domain_other'])) {
     $ini['server']['domain_other'] = "pc.jt";
 }
+$ini["app_dir_in_config"] = $ini["app_dir"];
 
 function parse_dir($name, $dvalue)
 {
@@ -183,7 +184,7 @@ $log_dir = isset($ini["server"]["log_dir"]) ? $ini["server"]["log_dir"] : ($base
 if (!is_dir($log_dir)) {
     mkdir($log_dir, 0777, true);
 }
-
+$ini["server"]["log_dir"] = $log_dir;
 //"this_port", $ini['server']['this_port'],
 
 $find = ["domain_app", "base_root", "this_ip", "nginx_root", "domain_this", "domain_other", "domain_this_1", "domain_other_1", "www_dir", "nginx_cmd", "php_cmd"];
@@ -401,6 +402,9 @@ foreach (["web", "logs"] as $d) {
         mkdir($web_dir, 0777, true);
     }
 }
+
+file_put_contents(__DIR__."/../bin/runtime.json",json_encode($ini));
+
 
 function parse_tpl($tpl_file, $find, $replace, $to_file = null)
 {

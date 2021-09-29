@@ -11,33 +11,11 @@ $host_file = is_win() ? 'C:/Windows/System32/drivers/etc/hosts' : '/etc/hosts';
 
 function config($app_all = true)
 {
-    global $config_file;
     static $config;
-    if (!$config) {
-        $config = parse_ini_file($config_file, true);
-        if ($app_all) {
-            $www_dir = rtrim($config["server"]["www_dir"], "/");
-            if (isset($www_dir) && is_dir($www_dir)) {
-                $temp = scandir($www_dir);
-                foreach ($temp as $v) {
-                    $a = $www_dir . '/' . $v;
-                    if (is_dir($a)) {
-
-                        if ($v == '.' || $v == '..') {
-                            continue;
-                        }
-                        $config["app_dir"][$v] = $a;
-                    }
-                }
-            }
-        }
-
-        foreach ($config as $key => $value) {
-            foreach ($value as $k => $v) {
-                $config[$key][$k] = str_replace("\\", "/", $v);
-            }
-        }
+    if(!$config){
+        $config = json_decode(file_get_contents(__DIR__."/runtime.json"),true);
     }
+   
     return $config;
 }
 function is_win()
@@ -60,7 +38,7 @@ function app_add($name, $dir)
 
     global $config_file;
     $config = config(false);
-    $apps = $config["app_dir"];
+    $apps = $config["app_dir_in_config"];
     if (isset($apps[$name])) {
         show_error("Error:App is exist;" . $apps[$name]);
         exit;
@@ -158,7 +136,7 @@ function app_remove($name, $dir = null)
 {
     global $config_file;
     $config = config(false);
-    $apps = $config["app_dir"];
+    $apps = $config["app_dir_in_config"];
     if (!$dir) {
         $name = str_replace("\\", "/", $name);
         $names = array_keys(array_filter($apps, function ($item) use ($name) {
@@ -192,13 +170,31 @@ function app_remove($name, $dir = null)
 function app_list()
 {
     $config = config();
-
-    print_r($config["app_dir"]);
+ 
+    print_r( $config["app_dir"]);
+    if($config["app_proxy_pass"]){
+        print_r($config["app_proxy_pass"]);
+    }
+    if($config["domain_proxy_pass"]){
+        print_r($config["domain_proxy_pass"]);
+    }
+    if($config["app_spring_boot_info"]){
+        print_r($config["app_spring_boot_info"]);
+    }
+    
 }
 
 function app_ls()
 {
     app_list();
+}
+
+function app_start($name){
+    $config = config();
+    if(isset($config["app_spring_boot_info"][$name])){
+        echo "start ".$config["app_spring_boot_info"][$name]["jar"].PHP_EOL;
+        runcmd_log($config["server"]["java_cmd"].' -jar '.$config["app_spring_boot_info"][$name]["jar"].' --server.port='.$config["app_spring_boot_info"][$name]["port"].' --from-epii-server --app-of-'.$name.' >'.$config["server"]["log_dir"].DIRECTORY_SEPARATOR.$name.".java.log");
+    }
 }
 
 function domain_list()
@@ -289,7 +285,10 @@ function do_help()
         "|epii-server hosts clear|清除相关本地域名添加,需要管理员权限|" . PHP_EOL .
         "|epii-server domain list\ls|外网域名列表|" . PHP_EOL .
         "|epii-server domain add {domain} {appname}|新增外网域名绑定|" . PHP_EOL .
-        "|epii-server domain remove {domain}|解除域名绑定|" . PHP_EOL;
+        "|epii-server domain remove {domain}|解除域名绑定|" . PHP_EOL.
+        "|epii-server app stop {java_app_name}|java 项目单个项目关闭|" . PHP_EOL .
+        "|epii-server app start {java_app_name}|java 项目单个项目启动|" . PHP_EOL .
+        "|epii-server app restart {java_app_name}|java 项目单个项目重启|" . PHP_EOL ;
 }
 function do_start()
 {
@@ -441,7 +440,16 @@ function app_dir($name, $dir = null)
         show_error("没有找到App");
     }
 }
+function runcmd_log($cmd)
+{
 
+    if (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN') {
+        pclose(popen('start /B ' . $cmd, 'r'));
+    } else {
+        pclose(popen($cmd." 2>&1 &", 'r'));
+       
+    }
+}
 if ($argc == 1) {
     do_start();
     exit;
