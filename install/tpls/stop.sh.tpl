@@ -1,3 +1,4 @@
+{{init_file}}
 echo stop nginx
 {{nginx_cmd}} -s stop
  if [ "$(uname)" == "Darwin" ]; then

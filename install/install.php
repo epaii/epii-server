@@ -365,11 +365,19 @@ $start_tpl = $this_dir . DIRECTORY_SEPARATOR . "tpls" . DIRECTORY_SEPARATOR . 's
 $start_bat = $base_root . DIRECTORY_SEPARATOR . "default" . DIRECTORY_SEPARATOR . "start.php";
 parse_tpl($start_tpl, $find, $replace, $start_bat);
 
+$init_file = "";
+
+if(file_exists($base_root.DIRECTORY_SEPARATOR."bin".DIRECTORY_SEPARATOR."init.sh")){
+    $init_file = "source ".$base_root.DIRECTORY_SEPARATOR."bin".DIRECTORY_SEPARATOR."init.sh";
+   // echo $base_root.DIRECTORY_SEPARATOR."bin".DIRECTORY_SEPARATOR."init.sh";
+}
+$find[] = "init_file";
+$replace[] = $init_file;
 
 //启动脚本
 $start_tpl = $this_dir . DIRECTORY_SEPARATOR . "tpls" . DIRECTORY_SEPARATOR . 'start.' . $shall_ext . '.tpl';
 $start_bat = $base_root . DIRECTORY_SEPARATOR . "start." . $shall_ext;
-parse_tpl($start_tpl, ['php_cmd'], [$ini['server']['php_cmd']], $start_bat);
+parse_tpl($start_tpl, ['php_cmd','init_file'], [$ini['server']['php_cmd'],$init_file], $start_bat);
 
 $stop_tpl = $this_dir . DIRECTORY_SEPARATOR . "tpls" . DIRECTORY_SEPARATOR . 'stop.' . $shall_ext . '.tpl';
 $staop_bat = $base_root . DIRECTORY_SEPARATOR . "stop." . $shall_ext;
