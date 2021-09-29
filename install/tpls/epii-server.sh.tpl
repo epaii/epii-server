@@ -9,6 +9,7 @@ else
     curPath=$(dirname $curFile)
 fi
 
+{{init_file}}
 
 function app_stop() {
 
