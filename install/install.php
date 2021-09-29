@@ -134,7 +134,7 @@ if (isset($ini['server']['www_dir'])) {
                             
                         } else if ($this_ini["app_type"] == "spring_boot_web") {
                             if (isset($this_ini["jar"])) {
-                                $ini["app_spring_boot"][$this_ini["app"]] = $tmp_dir . "/" . $this_ini["jar"];
+                                $ini["app_spring_boot"][$this_ini["app"]] = file_exists($this_ini["jar"])?$this_ini["jar"]: ($tmp_dir . "/" . $this_ini["jar"]);
                             } else {
                                 echo $this_ini["app"] . " : app_type need set jar" . PHP_EOL;
                                 exit;
