@@ -353,7 +353,7 @@ $replace[] = $php_bat;
 //增加java程序的启动
 $java_bat = "";
 foreach ($ini['app_spring_boot_info'] as $key => $value) {
-    $java_bat .= parse_tpl($this_dir . DIRECTORY_SEPARATOR . "tpls" . DIRECTORY_SEPARATOR . "start.java.tpl", ["java", "key", "port", "jar","log"], [$is_win?$ini["server"]["java_cmd"]:("nohup ".$ini["server"]["java_cmd"]), $key, $value["port"], $value["jar"],">".$base_root.DIRECTORY_SEPARATOR."logs".DIRECTORY_SEPARATOR.$key.".java.log"]);
+    $java_bat .= parse_tpl($this_dir . DIRECTORY_SEPARATOR . "tpls" . DIRECTORY_SEPARATOR . "start.java.tpl", ["java", "key", "port", "jar","log"], [$is_win?$ini["server"]["java_cmd"]:("nohup ".$ini["server"]["java_cmd"]), $key, $value["port"], $value["jar"],">".$log_dir.DIRECTORY_SEPARATOR.$key.".java.log"]);
 }
 
 $find[] = "java_bat";
