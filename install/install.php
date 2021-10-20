@@ -174,7 +174,7 @@ foreach ($ini["app_spring_boot"] as $key => $value) {
             $ini['domain_proxy_pass'][$d_key] = "http://127.0.0.1:". $port."/";
          }
     }
-    if(!$is_domain)
+    //if(!$is_domain)
     $ini['app_proxy_pass'][$key]="http://127.0.0.1:". $port."/";
   
    
