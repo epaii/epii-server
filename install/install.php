@@ -144,7 +144,7 @@ if (isset($ini['server']['www_dir'])) {
                                 $_domains = explode(" ", $this_ini["server_name"]);
                                 foreach ($_domains as $value) {
                                     if ($value = trim($value)) {
-                                        $ini['domain_proxy_pass'][$value] = $this_ini["app"];
+                                        $ini['domain_proxy_pass'][$value] = "app:".$this_ini["app"];
                                     }
                                 }
                             }
@@ -167,13 +167,13 @@ foreach ($ini["app_spring_boot"] as $key => $value) {
     $ini["app_spring_boot_info"][$key] =["jar"=>$value,"port"=> $port];
     $spring_port_begin++;
 
-
-    if(isset($ini['domain_proxy_pass'][$key])){
-        $ini['domain_proxy_pass'][$key] = "http://127.0.0.1:". $port."/";
-    }else{
-        $ini['app_proxy_pass'][$key]="http://127.0.0.1:". $port."/";
+    foreach ($ini['domain_proxy_pass'] as $d_key => $d_value) {
+         if($d_value == "app:".$key){
+            $ini['domain_proxy_pass'][$d_key] = "http://127.0.0.1:". $port."/";
+         }
     }
-
+    $ini['app_proxy_pass'][$key]="http://127.0.0.1:". $port."/";
+  
    
 }
 
