@@ -167,11 +167,14 @@ foreach ($ini["app_spring_boot"] as $key => $value) {
     $ini["app_spring_boot_info"][$key] =["jar"=>$value,"port"=> $port];
     $spring_port_begin++;
 
+    $is_domain = false;
     foreach ($ini['domain_proxy_pass'] as $d_key => $d_value) {
          if($d_value == "app:".$key){
+            $is_domain = true;
             $ini['domain_proxy_pass'][$d_key] = "http://127.0.0.1:". $port."/";
          }
     }
+    if(!$is_domain)
     $ini['app_proxy_pass'][$key]="http://127.0.0.1:". $port."/";
   
    
