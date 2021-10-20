@@ -288,7 +288,7 @@ function http_or_https($is_https)
     $replace[] = $nignx_config_common;
     if (!$is_https) {
         $find[] = "http_or_https";
-        $replace[] = " listen " . $ini["server"]["this_port"] . ";";
+        $replace[] = " listen " . $ini["server"]["this_port"] . " default_server;";
         return parse_tpl($nignx_config_tpl, $find, $replace);
     } else {
         $certs_dir = $ini["server"]["this_ssl_certs_dir"];
