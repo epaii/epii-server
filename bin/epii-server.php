@@ -463,7 +463,8 @@ function exe_reload(){
 }
 function exe_reinstall(){
     echo 'reinstall';
-    require_once __DIR__.'/../install/install.php';
+    runcmd_this('php '.__DIR__.'/../install/install.php');
+    //require_once __DIR__.'/../install/install.php';
     echo 'reinstall finish';
 }
 
