@@ -288,7 +288,9 @@ function do_help()
         "|epii-server domain remove {domain}|解除域名绑定|" . PHP_EOL.
         "|epii-server app stop {java_app_name}|java 项目单个项目关闭|" . PHP_EOL .
         "|epii-server app start {java_app_name}|java 项目单个项目启动|" . PHP_EOL .
-        "|epii-server app restart {java_app_name}|java 项目单个项目重启|" . PHP_EOL ;
+        "|epii-server app restart {java_app_name}|java 项目单个项目重启|" . PHP_EOL .
+        "|epii-server reinstall |重新生成配置文件|" . PHP_EOL .
+        "|epii-server reload |重新生成配置文件 并让nginx重新加载|" . PHP_EOL ;
 }
 function do_start()
 {
@@ -440,6 +442,17 @@ function app_dir($name, $dir = null)
         show_error("没有找到App");
     }
 }
+function exe_reload(){
+    echo 'reloading...';
+    exe_reinstall();
+    runcmd_this('nginx -s reload');
+    echo 'reload finish';
+}
+function exe_reinstall(){
+    echo 'reinstall';
+    require_once __DIR__.'/../install/install.php';
+    echo 'reinstall finish';
+}
 function runcmd_log($cmd)
 {
 
@@ -452,6 +465,12 @@ function runcmd_log($cmd)
 }
 if ($argc == 1) {
     do_start();
+    exit;
+}
+
+if($argc==2){
+    if (function_exists("exe_" . $argv[1]))
+        call_user_func("exe_" . $argv[1]);
     exit;
 }
 
