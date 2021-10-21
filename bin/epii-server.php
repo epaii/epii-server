@@ -193,7 +193,7 @@ function app_start($name){
     $config = config();
     if(isset($config["app_spring_boot_info"][$name])){
         echo "start ".$config["app_spring_boot_info"][$name]["jar"].PHP_EOL;
-        runcmd_log($config["server"]["java_cmd"].' -jar '.$config["app_spring_boot_info"][$name]["jar"].' --server.port='.$config["app_spring_boot_info"][$name]["port"].' --from-epii-server --app-of-'.$name.' >'.$config["server"]["log_dir"].DIRECTORY_SEPARATOR.$name.".java.log");
+        runcmd_log($config["server"]["java_cmd"].' -jar '.$config["app_spring_boot_info"][$name]["jar"].' --server.port='.$config["app_spring_boot_info"][$name]["port"].' --spring.profiles.active=pro --from-epii-server --app-of-'.$name.' >'.$config["server"]["log_dir"].DIRECTORY_SEPARATOR.$name.".java.log");
     }
 }
 
