@@ -1,4 +1,5 @@
 <?php
+
 error_reporting(0);
 $this_dir = str_replace("\\", "/", __DIR__);
 $base_root = str_replace(DIRECTORY_SEPARATOR . "bin", "", __DIR__);
@@ -442,6 +443,18 @@ function app_dir($name, $dir = null)
         show_error("没有找到App");
     }
 }
+
+function runcmd_log($cmd)
+{
+
+    if (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN') {
+        pclose(popen('start /B ' . $cmd, 'r'));
+    } else {
+        pclose(popen($cmd." 2>&1 &", 'r'));
+       
+    }
+}
+
 function exe_reload(){
     echo 'reloading...';
     exe_reinstall();
@@ -453,26 +466,16 @@ function exe_reinstall(){
     require_once __DIR__.'/../install/install.php';
     echo 'reinstall finish';
 }
-function runcmd_log($cmd)
-{
 
-    if (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN') {
-        pclose(popen('start /B ' . $cmd, 'r'));
-    } else {
-        pclose(popen($cmd." 2>&1 &", 'r'));
-       
-    }
+if (function_exists("exe_" . $argv[1])){
+    call_user_func("exe_" . $argv[1]);
 }
+
 if ($argc == 1) {
     do_start();
     exit;
 }
 
-if($argc==2){
-    if (function_exists("exe_" . $argv[1]))
-        call_user_func("exe_" . $argv[1]);
-    exit;
-}
 
 if ($argc == 3) {
     if (function_exists("do_" . $argv[1]))
