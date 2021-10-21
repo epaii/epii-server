@@ -295,7 +295,12 @@ function do_help()
 }
 function do_start()
 {
-    include __DIR__ . "/../default/start.php";
+    //include __DIR__ . "/../default/start.php";
+    if (is_win()) {
+        runcmd_this(__DIR__ . "/../start.bat");
+    } else {
+        runcmd_this(__DIR__ . "/../start.sh");
+    }
 }
 
 function do_stop()
