@@ -3,6 +3,6 @@ cd %driver%
 set driver=%driver:~0,2%
 %driver%
 
-{{php_cmd}} ./default/start.php
+{{php_cmd}} ./default/run.php
 
 pause
