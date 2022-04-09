@@ -1,4 +1,5 @@
 <?php
+
 error_reporting(0);
 $this_dir = str_replace("\\", "/", __DIR__);
 $base_root = str_replace(DIRECTORY_SEPARATOR . "bin", "", __DIR__);
@@ -193,7 +194,7 @@ function app_start($name){
     $config = config();
     if(isset($config["app_spring_boot_info"][$name])){
         echo "start ".$config["app_spring_boot_info"][$name]["jar"].PHP_EOL;
-        runcmd_log($config["server"]["java_cmd"].' -jar '.$config["app_spring_boot_info"][$name]["jar"].' --server.port='.$config["app_spring_boot_info"][$name]["port"].' --from-epii-server --app-of-'.$name.' >'.$config["server"]["log_dir"].DIRECTORY_SEPARATOR.$name.".java.log");
+        runcmd_log($config["server"]["java_cmd"].' -jar '.$config["app_spring_boot_info"][$name]["jar"].' --server.port='.$config["app_spring_boot_info"][$name]["port"].' --spring.profiles.active=pro --from-epii-server --app-of-'.$name.' >'.$config["server"]["log_dir"].DIRECTORY_SEPARATOR.$name.".java.log");
     }
 }
 
@@ -288,11 +289,18 @@ function do_help()
         "|epii-server domain remove {domain}|解除域名绑定|" . PHP_EOL.
         "|epii-server app stop {java_app_name}|java 项目单个项目关闭|" . PHP_EOL .
         "|epii-server app start {java_app_name}|java 项目单个项目启动|" . PHP_EOL .
-        "|epii-server app restart {java_app_name}|java 项目单个项目重启|" . PHP_EOL ;
+        "|epii-server app restart {java_app_name}|java 项目单个项目重启|" . PHP_EOL .
+        "|epii-server reinstall |重新生成配置文件|" . PHP_EOL .
+        "|epii-server reload |重新生成配置文件 并让nginx重新加载|" . PHP_EOL ;
 }
 function do_start()
 {
-    include __DIR__ . "/../default/start.php";
+    //include __DIR__ . "/../default/start.php";
+    if (is_win()) {
+        runcmd_this(__DIR__ . "/../start.bat");
+    } else {
+        runcmd_this(__DIR__ . "/../start.sh");
+    }
 }
 
 function do_stop()
@@ -440,6 +448,7 @@ function app_dir($name, $dir = null)
         show_error("没有找到App");
     }
 }
+
 function runcmd_log($cmd)
 {
 
@@ -450,10 +459,29 @@ function runcmd_log($cmd)
        
     }
 }
+
+function exe_reload(){
+    echo 'reloading...';
+    exe_reinstall();
+    runcmd_this('nginx -s reload');
+    echo 'reload finish';
+}
+function exe_reinstall(){
+    echo 'reinstall';
+    runcmd_this('php '.__DIR__.'/../install/install.php');
+    //require_once __DIR__.'/../install/install.php';
+    echo 'reinstall finish';
+}
+
+if (function_exists("exe_" . $argv[1])){
+    call_user_func("exe_" . $argv[1]);
+}
+
 if ($argc == 1) {
     do_start();
     exit;
 }
+
 
 if ($argc == 3) {
     if (function_exists("do_" . $argv[1]))
