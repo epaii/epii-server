@@ -13,3 +13,5 @@ readme.tuiguang.md
 /certs/*
 /logs
 runtime.json
+/web
+/configs

@@ -6,7 +6,7 @@
  * Date: 2018/7/27
  * Time: 上午10:19
  */
-error_reporting(0);
+error_reporting(E_ALL);
 $this_dir = str_replace("\\", "/", __DIR__);
 $base_root = str_replace(DIRECTORY_SEPARATOR . "install", "", __DIR__);
 $base_root = str_replace("\\", "/", $base_root);
@@ -194,6 +194,7 @@ $find = ["domain_app", "base_root", "this_ip", "nginx_root", "domain_this", "dom
 $replace = [implode(" ", array_keys($ini['domain_app'])), $base_root, $ini['server']['this_ip'], $ini['server']['nginx_root'], $ini['server']['domain_this'], $ini['server']['domain_other'], str_replace(".", "\\.", $ini['server']['domain_this']), str_replace(".", "\\.", $ini['server']['domain_other']), isset($ini['server']['www_dir']) ? $ini['server']['www_dir'] : $base_root . DIRECTORY_SEPARATOR . "web", $ini['nginx']['cmd'], $ini['server']['php_cmd']];
 
 $root_dir = "";
+if(isset($ini['root_dir']))
 foreach ($ini['root_dir'] as $key => $value) {
     $root_dir .= parse_tpl($this_dir . DIRECTORY_SEPARATOR . "tpls" . DIRECTORY_SEPARATOR . "nginx_root_dir.tpl", ["app", "dir"], [$key, $value]);
 }
@@ -202,6 +203,8 @@ $find = ["domain_app", "base_root", "this_ip", "nginx_root", "domain_this", "dom
 $replace = [implode(" ", array_keys($ini['domain_app'])), $base_root, $ini['server']['this_ip'], $ini['server']['nginx_root'], $ini['server']['domain_this'], $ini['server']['domain_other'], str_replace(".", "\\.", $ini['server']['domain_this']), str_replace(".", "\\.", $ini['server']['domain_other']), isset($ini['server']['www_dir']) ? $ini['server']['www_dir'] : $base_root . DIRECTORY_SEPARATOR . "web", $ini['nginx']['cmd'], $ini['server']['php_cmd']];
 
 $root_dir = "";
+if(isset($ini['root_dir']))
+
 foreach ($ini['root_dir'] as $key => $value) {
     $root_dir .= parse_tpl($this_dir . DIRECTORY_SEPARATOR . "tpls" . DIRECTORY_SEPARATOR . "nginx_root_dir.tpl", ["app", "dir"], [$key, $value]);
 }
@@ -303,14 +306,15 @@ function http_or_https($is_https)
 }
 
 //https 处理
-
-$nignx_config = $base_root . DIRECTORY_SEPARATOR . "configs" . DIRECTORY_SEPARATOR . "nginx" . DIRECTORY_SEPARATOR . 'ws.conf';
+$dist_dir = $base_root . DIRECTORY_SEPARATOR . "configs" . DIRECTORY_SEPARATOR . "nginx";
+mkdir($dist_dir,0777,true);
+$nignx_config =  $dist_dir. DIRECTORY_SEPARATOR . 'ws.conf';
 
 file_put_contents($nignx_config, file_get_contents($this_dir . DIRECTORY_SEPARATOR . "tpls" . DIRECTORY_SEPARATOR . "ws.conf.all.tpl") . "\n" . http_or_https(false) . "\n" . http_or_https(true));
 
 
 // domain——proxy app支持
-$nignx_config_domain_pass = $base_root . DIRECTORY_SEPARATOR . "configs" . DIRECTORY_SEPARATOR . "nginx" . DIRECTORY_SEPARATOR . 'proxypass.conf';
+$nignx_config_domain_pass = $dist_dir. DIRECTORY_SEPARATOR . 'proxypass.conf';
 $nignx_config_domain_pass_content = "";
 foreach($ini['domain_proxy_pass'] as $domain=>$topass){
     $this_find =["domain_app","this_port","proxy_pass"];
