@@ -160,7 +160,7 @@ rewrite ^/app/([^\/]+)/(.*)$ /$app_default_index;
         expires 7d;
         access_log off;
     }
-	location ~* \.(eot|ttf|ttc|otf|eot|woff|woff2|svg)$ {
+	location ~* \.(eot|ttf|ttc|otf|eot|woff|woff2|svg|js|css)$ {
 
        add_header Access-Control-Allow-Origin *;
 	}
