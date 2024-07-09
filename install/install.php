@@ -6,7 +6,7 @@
  * Date: 2018/7/27
  * Time: 上午10:19
  */
-error_reporting(E_ALL);
+error_reporting(0);
 $this_dir = str_replace("\\", "/", __DIR__);
 $base_root = str_replace(DIRECTORY_SEPARATOR . "install", "", __DIR__);
 $base_root = str_replace("\\", "/", $base_root);
@@ -233,7 +233,7 @@ $domain_app_list = "";
 foreach ($ini['domain_app'] as $key => $value) {
     $appinfo = explode("/", $value);
     for ($i = 0; $i < 4; $i++) {
-        if (!$appinfo[$i]) {
+        if (!isset($appinfo[$i])) {
             $appinfo[$i] = -1;
         }
     }
