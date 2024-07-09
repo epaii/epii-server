@@ -159,8 +159,9 @@ rewrite ^/app/([^\/]+)/(.*)$ /$app_default_index;
     location ~ .*\.(js|css)?$ {
         expires 7d;
         access_log off;
+        add_header Access-Control-Allow-Origin *;
     }
-	location ~* \.(eot|ttf|ttc|otf|eot|woff|woff2|svg|js|css)$ {
+	location ~* \.(eot|ttf|ttc|otf|eot|woff|woff2|svg)$ {
 
        add_header Access-Control-Allow-Origin *;
 	}
