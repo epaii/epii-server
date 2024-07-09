@@ -307,7 +307,7 @@ function http_or_https($is_https)
 
 //https 处理
 $dist_dir = $base_root . DIRECTORY_SEPARATOR . "configs" . DIRECTORY_SEPARATOR . "nginx";
-mkdir($dist_dir,0777,true);
+
 $nignx_config =  $dist_dir. DIRECTORY_SEPARATOR . 'ws.conf';
 
 file_put_contents($nignx_config, file_get_contents($this_dir . DIRECTORY_SEPARATOR . "tpls" . DIRECTORY_SEPARATOR . "ws.conf.all.tpl") . "\n" . http_or_https(false) . "\n" . http_or_https(true));
@@ -411,7 +411,7 @@ if (!$is_win) {
 $lock_file = __DIR__ . DIRECTORY_SEPARATOR . ".time";
 file_put_contents($lock_file, filectime($lock_file));
 
-foreach (["web", "logs"] as $d) {
+foreach (["web", "logs","configs/nginx"] as $d) {
     $web_dir = $base_root . DIRECTORY_SEPARATOR . $d;
     if (!is_dir($web_dir)) {
         mkdir($web_dir, 0777, true);
