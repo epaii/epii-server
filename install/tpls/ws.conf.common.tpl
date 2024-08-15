@@ -165,4 +165,8 @@ rewrite ^/app/([^\/]+)/(.*)$ /$app_default_index;
 
        add_header Access-Control-Allow-Origin *;
 	}
+
+    location ~ .*.(svn|git|cvs) {
+        deny all;
+    }
  
