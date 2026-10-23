@@ -475,8 +475,10 @@ function exe_reinstall(){
 
 if (function_exists("exe_" . $argv[1])){
     call_user_func("exe_" . $argv[1]);
+    exit;
 }
 
+ 
 if ($argc == 1) {
     do_start();
     exit;

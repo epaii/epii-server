@@ -1,5 +1,11 @@
     server_name *.{{domain_this}} {{this_ip}} {{domain_app}};
 
+        # 拦截包含 PHP_SESSION_UPLOAD_PROGRESS 的请求体，直接返回 403
+        if ($request_body ~* "PHP_SESSION_UPLOAD_PROGRESS") {
+            return 403;
+        }
+
+
 # ---app_proxy_pass---
 {{app_proxy_pass}}
 #---app_proxy_pass---
